@@ -1,7 +1,7 @@
 /************************************************************************************
- * arch/arm/src/stm32/stm32_fsmc.h
+ * arch/arm/src/stm32/stm32_fsmc.c
  *
- *   Copyright (C) 2019 Gregory Nutt. All rights reserved.
+ *   Copyright (C) 20019 Gregory Nutt. All rights reserved.
  *   Author: Jason T. Harris <sirmanlypowers@gmail.com>
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,35 +33,34 @@
  *
  ************************************************************************************/
 
-#ifndef __ARCH_ARM_STC_STM32_STM32_FSMC_H
-#define __ARCH_ARM_STC_STM32_STM32_FSMC_H
-
 /************************************************************************************
  * Included Files
  ************************************************************************************/
 
 #include <nuttx/config.h>
 
-#include "chip.h"
-#include "chip/stm32_fsmc.h"
+#include "stm32.h"
+
+#if defined(CONFIG_STM32_FSMC)
 
 /************************************************************************************
  * Pre-processor Definitions
  ************************************************************************************/
 
-#ifndef __ASSEMBLY__
-
-#undef EXTERN
-#if defined(__cplusplus)
-#define EXTERN extern "C"
-extern "C"
-{
-#else
-#define EXTERN extern
-#endif
+/************************************************************************************
+ * Private Types
+ ************************************************************************************/
 
 /************************************************************************************
- * Public Data
+ * Private Function Prototypes
+ ************************************************************************************/
+
+/************************************************************************************
+ * Private Data
+ ************************************************************************************/
+
+/************************************************************************************
+ * Private Functions
  ************************************************************************************/
 
 /************************************************************************************
@@ -76,7 +75,10 @@ extern "C"
  *
  ****************************************************************************/
 
-void stm32_fsmc_enable(void);
+void stm32_fsmc_enable(void)
+{
+  modifyreg32(STM32_RCC_AHB3ENR, 0, RCC_AHB3ENR_FSMCEN);
+}
 
 /****************************************************************************
  * Name: stm32_fsmc_disable
@@ -86,12 +88,9 @@ void stm32_fsmc_enable(void);
  *
  ****************************************************************************/
 
-void stm32_fsmc_disable(void);
-
-#undef EXTERN
-#if defined(__cplusplus)
+void stm32_fsmc_disable(void)
+{
+  modifyreg32(STM32_RCC_AHB3ENR, RCC_AHB3ENR_FSMCEN, 0);
 }
-#endif
 
-#endif /* __ASSEMBLY__ */
-#endif /* __ARCH_ARM_STC_STM32_STM32_FSMC_H */
+#endif /* CONFIG_STM32_FSMC */
