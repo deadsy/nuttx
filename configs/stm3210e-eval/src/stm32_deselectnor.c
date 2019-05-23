@@ -87,7 +87,7 @@ void stm32_deselectnor(void)
 
   /* Disable AHB clocking to the FSMC */
 
-  stm32_disablefsmc();
+  stm32_fsmc_disable();
 }
 
 #endif /* CONFIG_STM32_FSMC */
