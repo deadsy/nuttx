@@ -42,7 +42,7 @@
 #include <debug.h>
 
 #include "up_arch.h"
-#include "stm32_fsmc.h"
+#include "stm32.h"
 #include "stm3210e-eval.h"
 
 #ifdef CONFIG_STM32_FSMC

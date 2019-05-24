@@ -64,6 +64,10 @@
  * Pre-processor Definitions
  **************************************************************************************/
 
+#ifndef CONFIG_STM32_FSMC
+#  error CONFIG_STM32_FSMC is required for LCD support
+#endif
+
 /* Color depth and format */
 
 #define LCD_BPP          16
