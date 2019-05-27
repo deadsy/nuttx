@@ -75,10 +75,21 @@
  *
  ****************************************************************************/
 
+#if defined(CONFIG_STM32_STM32L15XX) || defined(CONFIG_STM32_STM32F10XX)
+
+void stm32_fsmc_enable(void)
+{
+  modifyreg32(STM32_RCC_AHBENR, 0, RCC_AHBENR_FSMCEN);
+}
+
+#elif defined(CONFIG_STM32_STM32F20XX) || defined(CONFIG_STM32_STM32F4XXX)
+
 void stm32_fsmc_enable(void)
 {
   modifyreg32(STM32_RCC_AHB3ENR, 0, RCC_AHB3ENR_FSMCEN);
 }
+
+#endif
 
 /****************************************************************************
  * Name: stm32_fsmc_disable
@@ -88,9 +99,20 @@ void stm32_fsmc_enable(void)
  *
  ****************************************************************************/
 
+#if defined(CONFIG_STM32_STM32L15XX) || defined(CONFIG_STM32_STM32F10XX)
+
+void stm32_fsmc_disable(void)
+{
+  modifyreg32(STM32_RCC_AHBENR, RCC_AHBENR_FSMCEN, 0);
+}
+
+#elif defined(CONFIG_STM32_STM32F20XX) || defined(CONFIG_STM32_STM32F4XXX)
+
 void stm32_fsmc_disable(void)
 {
   modifyreg32(STM32_RCC_AHB3ENR, RCC_AHB3ENR_FSMCEN, 0);
 }
+
+#endif
 
 #endif /* CONFIG_STM32_FSMC */
