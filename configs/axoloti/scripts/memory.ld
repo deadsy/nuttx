@@ -33,12 +33,13 @@
  *
  ****************************************************************************/
 
-/* The STM32F407VG has 1024Kb of FLASH beginning at address 0x0800:0000 and
- * 192Kb of SRAM. SRAM is split up into three blocks:
+/* The STM32F427IGH6 has 1024KiB of FLASH beginning at address 0x0800:0000 and
+ * 256KiB of SRAM. SRAM is split up into four blocks:
  *
- * 1) 112KB of SRAM beginning at address 0x2000:0000
- * 2)  16KB of SRAM beginning at address 0x2001:c000
- * 3)  64KB of CCM SRAM beginning at address 0x1000:0000
+ * 1) 112KiB of SRAM beginning at address 0x2000:0000
+ * 2)  16KiB of SRAM beginning at address 0x2001:c000
+ * 3)  64KiB of SRAM beginning at address 0x2002:0000
+ * 4)  64KiB of CCM SRAM beginning at address 0x1000:0000
  *
  * When booting from FLASH, FLASH memory is aliased to address 0x0000:0000
  * where the code expects to begin execution by jumping to the entry point in
@@ -47,7 +48,7 @@
  * For MPU support, the kernel-mode NuttX section is assumed to be 128Kb of
  * FLASH and 4Kb of SRAM.  That is an excessive amount for the kernel which
  * should fit into 64KB and, of course, can be optimized as needed (See
- * also configs/stm32f4discovery/scripts/kernel-space.ld).  Allowing the
+ * also configs/axoloti/scripts/kernel-space.ld).  Allowing the
  * additional does permit addition debug instrumentation to be added to the
  * kernel space without overflowing the partition.
  *
