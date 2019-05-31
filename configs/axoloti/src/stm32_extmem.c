@@ -1,5 +1,5 @@
-/************************************************************************************
- * configs/axoloti/src/stm32_fmc.c
+/****************************************************************************
+ * configs/axoloti/src/stm32_extmem.c
  *
  *   Copyright (C) 2019 Gregory Nutt. All rights reserved.
  *   Author: Jason T. Harris <sirmanlypowers@gmail.com>
@@ -31,11 +31,11 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- ************************************************************************************/
+ ****************************************************************************/
 
-/************************************************************************************
+/****************************************************************************
  * Included Files
- ************************************************************************************/
+ ****************************************************************************/
 
 #include <nuttx/config.h>
 
@@ -51,18 +51,19 @@
 #include "stm32.h"
 #include "axoloti.h"
 
-/************************************************************************************
+/****************************************************************************
  * Pre-processor Definitions
- ************************************************************************************/
+ ****************************************************************************/
 
 #ifndef CONFIG_STM32_FMC
 #warning "FMC is not enabled"
 #endif
 
 /****************************************************************************
- * Axoloti SDRAM GPIO configuration
- */
+ * Private Data
+ ****************************************************************************/
 
+/* Axoloti SDRAM GPIO configuration */
 static const uint32_t g_sdram_config[] = {
   /* data lines */
   GPIO_FMC_D0, GPIO_FMC_D1, GPIO_FMC_D2, GPIO_FMC_D3,
@@ -91,11 +92,16 @@ static const uint32_t g_sdram_config[] = {
 #define NUM_SDRAM_GPIOS (sizeof(g_sdram_config) / sizeof(uint32_t))
 
 /****************************************************************************
+ * Public Functions
+ ****************************************************************************/
+
+/****************************************************************************
  * Name: stm32_sdram_memtest
  *
  * Description:
  *  Test the SDRAM.
- */
+ *
+ ****************************************************************************/
 
 #define RAND_A 22695477
 #define RAND_C 1
@@ -158,7 +164,8 @@ int stm32_sdram_memtest(void *base, uint32_t size)
  * Description:
  *   Called from stm32_bringup to initialize external SDRAM access.
  *   The Axoloti uses an Alliance Memory AS4C4M16SA SDRAM.
- */
+ *
+ ****************************************************************************/
 
 int stm32_sdram_initialize(void)
 {
