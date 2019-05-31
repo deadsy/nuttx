@@ -33,6 +33,10 @@
  *
  ****************************************************************************/
 
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
+
 #include <nuttx/config.h>
 
 #include <stdbool.h>
@@ -46,14 +50,30 @@
 #include "stm32.h"
 #include "axoloti.h"
 
-/* Configuration ************************************************************/
+#ifdef HAVE_SDIO
+
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
 
 /* Card detections requires card support and a card detection GPIO */
-
 #define HAVE_NCD 1
 #if !defined(HAVE_SDIO) || !defined(GPIO_SDIO_NCD)
 #undef HAVE_NCD
 #endif
+
+/****************************************************************************
+ * Private Data
+ ****************************************************************************/
+
+static FAR struct sdio_dev_s *g_sdio_dev;
+#ifdef HAVE_NCD
+static bool g_sd_inserted = 0xff;       /* Impossible value */
+#endif
+
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
 
 /****************************************************************************
  * Name: stm32_ncd_interrupt
@@ -63,12 +83,7 @@
  *
  ****************************************************************************/
 
-static FAR struct sdio_dev_s *g_sdio_dev;
-
 #ifdef HAVE_NCD
-
-static bool g_sd_inserted = 0xff;       /* Impossible value */
-
 static int stm32_ncd_interrupt(int irq, FAR void *context, FAR void *arg)
 {
   bool present;
@@ -81,6 +96,10 @@ static int stm32_ncd_interrupt(int irq, FAR void *context, FAR void *arg)
   return OK;
 }
 #endif
+
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
 
 /****************************************************************************
  * Name: stm32_sdio_initialize
@@ -96,15 +115,18 @@ int stm32_sdio_initialize(void)
 
 #ifdef HAVE_NCD
   bool cd_status;
-  // Configure the card detect GPIO
+
+  /* Configure the card detect GPIO */
   stm32_configgpio(GPIO_SDIO_NCD);
-  // Register an interrupt handler for the card detect pin
+
+  /* Register an interrupt handler for the card detect pin */
   (void)stm32_gpiosetevent(GPIO_SDIO_NCD, true, true, true, stm32_ncd_interrupt,
                            NULL);
+
 #endif
 
-  // Mount the SDIO-based MMC/SD block driver
-  // First, get an instance of the SDIO interface
+  /* Mount the SDIO-based MMC/SD block driver */
+  /* First, get an instance of the SDIO interface */
   finfo("Initializing SDIO slot %d\n", SDIO_SLOTNO);
   g_sdio_dev = sdio_initialize(SDIO_SLOTNO);
   if (!g_sdio_dev)
@@ -112,7 +134,8 @@ int stm32_sdio_initialize(void)
       ferr("ERROR: Failed to initialize SDIO slot %d\n", SDIO_SLOTNO);
       return -ENODEV;
     }
-  // Now bind the SDIO interface to the MMC/SD driver
+
+  /* Now bind the SDIO interface to the MMC/SD driver */
   finfo("Bind SDIO to the MMC/SD driver, minor=%d\n", SDIO_MINOR);
   ret = mmcsd_slotinitialize(SDIO_MINOR, g_sdio_dev);
   if (ret != OK)
@@ -136,4 +159,4 @@ int stm32_sdio_initialize(void)
   return OK;
 }
 
-/****************************************************************************/
+#endif /* HAVE_SDIO */
