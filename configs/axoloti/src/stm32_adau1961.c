@@ -1,4 +1,4 @@
-/************************************************************************************
+/****************************************************************************
  * configs/axoloti/src/stm32_adau1961.c
  *
  *   Copyright (C) 2019 Gregory Nutt. All rights reserved.
@@ -31,7 +31,11 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- ************************************************************************************/
+ ****************************************************************************/
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 
 #include <nuttx/config.h>
 
@@ -51,7 +55,21 @@
 #include "stm32.h"
 #include "axoloti.h"
 
-/************************************************************************************/
+#ifdef HAVE_ADAU1961
+
+/****************************************************************************
+ * Private Types
+ ****************************************************************************/
+
+struct stm32_mwinfo_s
+{
+  /* Standard ADAU1961 interface */
+  struct adau1961_lower_s lower;
+};
+
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
 
 static int adau1961_attach(FAR const struct adau1961_lower_s *lower,
                            adau1961_handler_t isr, FAR void *arg)
@@ -76,12 +94,6 @@ static void adau1961_hw_reset(FAR const struct adau1961_lower_s *lower)
  * Private Data
  ****************************************************************************/
 
-struct stm32_mwinfo_s
-{
-  /* Standard ADAU1961 interface */
-  struct adau1961_lower_s lower;
-};
-
 /* A reference to a structure of this type must be passed to the ADAU1961
  * driver.  This structure provides information about the configuration
  * of the ADAU1961 and provides some board-specific hooks.
@@ -100,6 +112,10 @@ static struct stm32_mwinfo_s g_adau1961info = {
             .reset = adau1961_hw_reset,
             },
 };
+
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
 
 /****************************************************************************
  * Name: stm32_adau1961_initialize
@@ -190,4 +206,4 @@ error:
   return ret;
 }
 
-/************************************************************************************/
+#endif /* HAVE_ADAU1961 */

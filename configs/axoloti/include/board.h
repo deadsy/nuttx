@@ -264,57 +264,6 @@
 /* dma 2, stream 6, channel 4 */
 #define DMAMAP_SDIO DMAMAP_SDIO_2
 
-/************************************************************************************
- * FMC
- *
- * PD14 af12   sdram_d0 (FMC_D0)
- * PD15 af12   sdram_d1 (FMC_D1)
- * PD0  af12   sdram_d2 (FMC_D2)
- * PD1  af12   sdram_d3 (FMC_D3)
- * PE7  af12   sdram_d4 (FMC_D4)
- * PE8  af12   sdram_d5 (FMC_D5)
- * PE9  af12   sdram_d6 (FMC_D6)
- * PE10 af12   sdram_d7 (FMC_D7)
- * PE11 af12   sdram_d8 (FMC_D8)
- * PE12 af12   sdram_d9 (FMC_D9)
- * PE13 af12   sdram_d10 (FMC_D10)
- * PE14 af12   sdram_d11 (FMC_D11)
- * PE15 af12   sdram_d12 (FMC_D12)
- * PD8  af12   sdram_d13 (FMC_D13)
- * PD9  af12   sdram_d14 (FMC_D14)
- * PD10 af12   sdram_d15 (FMC_D15)
- *
- * PF0  af12   sdram_a0 (FMC_A0)
- * PF1  af12   sdram_a1 (FMC_A1)
- * PF2  af12   sdram_a2 (FMC_A2)
- * PF3  af12   sdram_a3 (FMC_A3)
- * PF4  af12   sdram_a4 (FMC_A4)
- * PF5  af12   sdram_a5 (FMC_A5)
- * PF12 af12   sdram_a6 (FMC_A6)
- * PF13 af12   sdram_a7 (FMC_A7)
- * PF14 af12   sdram_a8 (FMC_A8)
- * PF15 af12   sdram_a9 (FMC_A9)
- * PG0  af12   sdram_a10 (FMC_A10)
- * PG1  af12   sdram_a11 (FMC_A11)
- * PG2  af12   sdram_a12 (FMC_A12)
- *
- * PF11 af12   sdram_ras (FMC_SNDRAS)
- * PG15 af12   sdram_cas (FMC_SDNCAS)
- *
- * PG4  af12   sdram_ba0 (FMC_A14/FMC_BA0)
- * PG5  af12   sdram_ba1 (FMC_A15/FMC_BA1)
- *
- * PE0  af12   sdram_ldqm (FMC_NBL0)
- * PE1  af12   sdram_udqm (FMC_NBL1)
- * PG8  af12   sdram_clk (FMC_SDCLK)
- * PH2  af12   sdram_cke (FMC_SDCKE0)
- * PH3  af12   sdram_cs0 (FMC_SDNE0)
- * PH5  af12   sdram_we (FMC_SDNWE)
- *
- * PH6  af12   ? (FMC_SDNE1)
- * PB6  af12   tp47 (FMC_SDNE1)
- */
-
 /************************************************************************************/
 
 #endif /* __CONFIG_AXOLOTI_INCLUDE_BOARD_H */
