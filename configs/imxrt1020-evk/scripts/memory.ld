@@ -33,11 +33,15 @@
  *
  ****************************************************************************/
 
-/* The MIMXRT1020-EVK has 64Mb of Hyper FLASH beginning at address,
- * 0x0060:0000, 512Kb of DTCM RAM beginning at 0x2000:0000, and 512Kb OCRAM
- * beginning at 0x2020:0000.  Neither DTCM or SDRAM are used in this
- * configuration.
+/* The MIMXRT1020-EVK has:
+ * 256 KiB ITCM RAM   @ 0x0000:0000
+ * 96 KiB Boot ROM    @ 0x0020:0000
+ * 256 KiB DTCM RAM   @ 0x2000:0000
+ * 256 KiB OnChip RAM @ 0x2020:0000
+ * 8MiB of QSPI Flash @ 0x6000:0000
+ * 32MiB of SDRAM     @ 0x8000:0000
  *
+ * TODO - review this
  * The user and kernel space partitions will be spanned with a single
  * region of size 2**n bytes.  As a consequence, as the partitions increase
  * in size, the alignment requirement also increases.  The sizes below give
@@ -68,15 +72,15 @@
 
 MEMORY
 {
-  /* 64Mb of HyperFLASH */
+  /* 32MiB of HyperFLASH */
 
   kflash (rx)  : ORIGIN = 0x60000000, LENGTH = 1M
   uflash (rx)  : ORIGIN = 0x60200000, LENGTH = 1M
-  flash  (rx)  : ORIGIN = 0x60400000, LENGTH = 62M
+  flash  (rx)  : ORIGIN = 0x60400000, LENGTH = 30M
 
-  /* 512Kb of OCRAM */
+  /* 256KiB of OCRAM */
 
-  dtcm   (rwx) : ORIGIN = 0x20000000, LENGTH = 512K
-  kocram (rwx) : ORIGIN = 0x20200000, LENGTH = 256K
-  uocram (rwx) : ORIGIN = 0x20240000, LENGTH = 256K
+  dtcm   (rwx) : ORIGIN = 0x20000000, LENGTH = 256K
+  kocram (rwx) : ORIGIN = 0x20200000, LENGTH = 128K
+  uocram (rwx) : ORIGIN = 0x20240000, LENGTH = 128K
 }
