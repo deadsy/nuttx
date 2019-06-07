@@ -1,8 +1,8 @@
 /****************************************************************************
  * configs/imxrt1020-evk/scripts/memory.ld
  *
- *   Copyright (C) 2018 Gregory Nutt. All rights reserved.
- *   Author: Gregory Nutt <gnutt@nuttx.org>
+ *   Copyright (C) 2019 Gregory Nutt. All rights reserved.
+ *   Author: Jason T. Harris <sirmanlypowers@gmail.com>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -33,54 +33,64 @@
  *
  ****************************************************************************/
 
-/* The MIMXRT1020-EVK has:
- * 256 KiB ITCM RAM   @ 0x0000:0000
- * 96 KiB Boot ROM    @ 0x0020:0000
- * 256 KiB DTCM RAM   @ 0x2000:0000
- * 256 KiB OnChip RAM @ 0x2020:0000
- * 8MiB of QSPI Flash @ 0x6000:0000
- * 32MiB of SDRAM     @ 0x8000:0000
+/* 
+ * On Chip RAM:
  *
- * TODO - review this
- * The user and kernel space partitions will be spanned with a single
- * region of size 2**n bytes.  As a consequence, as the partitions increase
- * in size, the alignment requirement also increases.  The sizes below give
- * the largest possible user address spaces (but leave far too much for the
- * OS).
+ * The i.MX RT1020 has 256 KiB of on chip RAM.
+ * The FlexRAM controller partitions it into 3 regions:
  *
- * The solution to this wasted memory is to (1) use more than one region to
- * span the user spaces, or (2) poke holes in a larger region (via sub-
- * regions) to trim it to fit better.
+ * ocram - on chip ram (@ 0x2020:0000)
+ * dtcm - data tightly coupled memory (@ 0x2000:0000)
+ * itcm - instruction tightly coupled memory (@ 0x0000:0000)
+ * 
+ * The RAM split is configurable:
+ * At boot time it's determined by the an entry in the fusemap.
+ * OCOTP.HW_OCOTP_MISC_CONF0 (0x401f:46d0)
+ * It can be reconfigured by software:
+ * IOMUXC_GPR.GPR16 (0x400a:c040)
+ * IOMUXC_GPR.GPR17 (0x400a:c044)
+ * 
+ * The MIMXRT1020-EVK (at boot) has the on chip RAM partitioned as follows:
+ * ocram - 128 KiB
+ * dtcm  - 64 KiB
+ * itcm  - 64 KiB
+ * ...and that's what we set here, but keep aware that you can reconfigure it.
+ * 
+ * Also keep in mind that the idea is to use the external SDRAM as the main RAM
+ * resource. That's relatively slow, but the L1 cache should keep things fast.
+ * The on-chip RAM is go-fast RAM for optimisation. Benchmark your code and work
+ * out where you want to put code/data. 
  *
- * A detailed memory map for the 512KB SRAM region is as follows:
+ * External RAM:
  *
- *   0x2020 0000:  Kernel .data region.  Typical size: 0.1KB
- *   ------ ----   Kernel .bss  region.  Typical size: 1.8KB
- *   0x2020 0800:  Kernel IDLE thread stack (approximate).  Size is
- *                 determined by CONFIG_IDLETHREAD_STACKSIZE and
- *                 adjustments for alignment.  Typical is 1KB.
- *   ------ ----   Padded to 4KB
- *   0x2040 0000:  User .data region.  Size is variable.
- *   ------- ----  User .bss region  Size is variable.
- *   0x2042 0000:  Beginning of kernel heap.  Size determined by
- *                 CONFIG_MM_KERNEL_HEAPSIZE.
- *   ------ ----   Beginning of user heap.  Can vary with other settings.
- *   0x2080 0000:  End+1 of mappable OCRAM
+ * The MIMRXRT1020-EVK has a 32 MiB SDRAM (@ 0x8000:0000)
+ * It is enabled and configured via the SEMC controller.
+ *
+ * On Chip ROM:
+ *
+ * The i.MX RT1020 has 96 KiB of on chip boot rom (@ 0x0020:0000)
+ *
+ * External ROM:
+ *
+ * The MIMRXRT1020-EVK has a 8 MiB of QSPI Flash (@ 0x6000:0000)
+ * It is enabled and configured via the FlexSPI controller.
  */
 
 /* Specify the memory areas */
 
 MEMORY
 {
-  /* 32MiB of HyperFLASH */
-
+  /* 8 MiB of QSPI Flash */
   kflash (rx)  : ORIGIN = 0x60000000, LENGTH = 1M
-  uflash (rx)  : ORIGIN = 0x60200000, LENGTH = 1M
-  flash  (rx)  : ORIGIN = 0x60400000, LENGTH = 30M
+  uflash (rx)  : ORIGIN = 0x60100000, LENGTH = 1M
+  flash  (rx)  : ORIGIN = 0x60200000, LENGTH = 6M
 
-  /* 256KiB of OCRAM */
+  /* 256 KiB of on chip RAM */
+  itcm   (rwx) : ORIGIN = 0x00000000, LENGTH = 64K
+  dtcm   (rwx) : ORIGIN = 0x20000000, LENGTH = 64K
+  kocram (rwx) : ORIGIN = 0x20200000, LENGTH = 64K
+  uocram (rwx) : ORIGIN = 0x20210000, LENGTH = 64K
 
-  dtcm   (rwx) : ORIGIN = 0x20000000, LENGTH = 256K
-  kocram (rwx) : ORIGIN = 0x20200000, LENGTH = 128K
-  uocram (rwx) : ORIGIN = 0x20240000, LENGTH = 128K
+  /* 32 MiB of SDRAM */
+  sdram  (rwx) : ORIGIN = 0x80000000, LENGTH = 32M
 }

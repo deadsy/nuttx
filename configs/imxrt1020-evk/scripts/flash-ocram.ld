@@ -1,8 +1,9 @@
 /****************************************************************************
  * configs/imxrt1020-evk/scripts/flash-ocram.ld
  *
- *   Copyright (C) 2018 Gregory Nutt. All rights reserved.
- *   Author: Ivan Ucherdzhiev <ivanucherdjiev@gmail.com>
+ *   Copyright (C) 2019 Gregory Nutt. All rights reserved.
+ *   Authors: Ivan Ucherdzhiev <ivanucherdjiev@gmail.com>
+ *            Jason T Harris <sirmanlypowers@gmail.com>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -37,10 +38,10 @@
 
 MEMORY
 {
-	flash (rx)  : ORIGIN = 0x60000000, LENGTH = 504M
-	sram  (rwx) : ORIGIN = 0x20200000, LENGTH = 256K
-	itcm  (rwx) : ORIGIN = 0x00000000, LENGTH = 256K
-	dtcm  (rwx) : ORIGIN = 0x20000000, LENGTH = 256K
+	itcm  (rwx) : ORIGIN = 0x00000000, LENGTH = 64K
+	dtcm  (rwx) : ORIGIN = 0x20000000, LENGTH = 64K
+	sram  (rwx) : ORIGIN = 0x20200000, LENGTH = 128K
+	flash (rx)  : ORIGIN = 0x60000000, LENGTH = 32M
 }
 
 OUTPUT_ARCH(arm)
