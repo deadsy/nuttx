@@ -82,10 +82,10 @@
 
 void board_button_initialize(void)
 {
-   /* Configure the buttons as input */
+  /* Configure the buttons as input */
 
-   imxrt_config_gpio(GPIO_SWWAKE);
-   imxrt_config_gpio(GPIO_SWONOFF);   
+  imxrt_config_gpio(GPIO_SWWAKE);
+  imxrt_config_gpio(GPIO_SWONOFF);
 }
 
 /****************************************************************************

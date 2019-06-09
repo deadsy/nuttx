@@ -1,4 +1,4 @@
-/************************************************************************************
+/****************************************************************************
  * configs/imxrt1020-evk/include/board.h
  *
  *   Copyright (C) 2018-2019 Gregory Nutt. All rights reserved.
@@ -34,26 +34,28 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- ************************************************************************************/
+ ****************************************************************************/
 
 #ifndef __CONFIGS_IMXRT1020_EVK_INCLUDE_BOARD_H
 #define __CONFIGS_IMXRT1020_EVK_INCLUDE_BOARD_H
 
-/************************************************************************************
+/****************************************************************************
  * Included Files
- ************************************************************************************/
+ ****************************************************************************/
 
 #include <nuttx/config.h>
 
-/************************************************************************************
+/****************************************************************************
  * Pre-processor Definitions
- ************************************************************************************/
+ ****************************************************************************/
 
-/* Clocking *************************************************************************/
+/****************************************************************************
+ * Clocking
+ */
 
-/* Set VDD_SOC to 1.25V */
+#define IMXRT_VDD_SOC (0x12)    /* VDD_SOC 1250 mV = 800 mV + (0x12 * 25 mV) */
 
-#define IMXRT_VDD_SOC (0x12)
+/*TODO - review carefully*/
 
 /* Set Arm PLL (PLL1) to  fOut    = (24Mhz * ARM_PLL_DIV_SELECT/2) / ARM_PODF_DIVISOR
  *                        600Mhz  = (24Mhz * ARM_PLL_DIV_SELECT/2) / ARM_PODF_DIVISOR
@@ -90,6 +92,30 @@
  */
 
 #define BOARD_XTAL_FREQUENCY      24000000
+#define BOARD_CPU_FREQUENCY       500000000U
+
+#define IMXRT_PRE_PERIPH_CLK_SEL  CCM_CBCMR_PRE_PERIPH_CLK_SEL_PLL6
+#define IMXRT_PERIPH_CLK_SEL      CCM_CBCDR_PERIPH_CLK_SEL_PRE_PERIPH
+#define IMXRT_ARM_PODF_DIVIDER    1
+#define IMXRT_AHB_PODF_DIVIDER    1
+#define IMXRT_IPG_PODF_DIVIDER    4
+#define IMXRT_PERCLK_CLK_SEL      CCM_CSCMR1_PERCLK_CLK_SEL_IPG_CLK_ROOT
+#define IMXRT_PERCLK_PODF_DIVIDER 2
+#define IMXRT_SEMC_PODF_DIVIDER   4
+#define IMXRT_LPSPI_CLK_SELECT    CCM_CBCMR_LPSPI_CLK_SEL_PLL3_PFD0
+#define IMXRT_LSPI_PODF_DIVIDER   8
+#define IMXRT_USDHC1_CLK_SELECT    CCM_CSCMR1_USDHC1_CLK_SEL_PLL2_PFD0
+#define IMXRT_USDHC1_PODF_DIVIDER 2
+
+#define IMXRT_SYS_PLL_DIV_SELECT    CCM_ANALOG_PLL_SYS_DIV_SELECT_22
+#define IMXRT_USB1_PLL_DIV_SELECT  CCM_ANALOG_PLL_USB1_DIV_SELECT_20
+#define IMXRT_AUDIO_PLL_DIV_SELECT (45)
+
+#if 0
+
+/*taken from imxrt1050-evk*/
+
+#define BOARD_XTAL_FREQUENCY      24000000
 #define IMXRT_PRE_PERIPH_CLK_SEL  CCM_CBCMR_PRE_PERIPH_CLK_SEL_PLL1
 #define IMXRT_PERIPH_CLK_SEL      CCM_CBCDR_PERIPH_CLK_SEL_PRE_PERIPH
 #define IMXRT_ARM_PLL_DIV_SELECT  100
@@ -109,7 +135,11 @@
 #define BOARD_CPU_FREQUENCY \
   (BOARD_XTAL_FREQUENCY * (IMXRT_ARM_PLL_DIV_SELECT / 2)) / IMXRT_ARM_PODF_DIVIDER
 
-/* LED definitions ******************************************************************/
+#endif
+
+/****************************************************************************
+ * LED Definitions
+ */
 
 /* There are four LED status indicators located on the EVK Board.  The functions of
  * these LEDs include:
@@ -143,22 +173,24 @@
  *   SYMBOL                   Meaning                   LED
  *   -------------------- ----------------------------- ------ */
 
-#define LED_STARTED       0  /* NuttX has been started  OFF    */
-#define LED_HEAPALLOCATE  0  /* Heap has been allocated OFF    */
-#define LED_IRQSENABLED   0  /* Interrupts enabled      OFF    */
-#define LED_STACKCREATED  1  /* Idle stack created      ON     */
-#define LED_INIRQ         2  /* In an interrupt         N/C    */
-#define LED_SIGNAL        2  /* In a signal handler     N/C    */
-#define LED_ASSERTION     2  /* An assertion failed     N/C    */
-#define LED_PANIC         3  /* The system has crashed  FLASH  */
-#undef  LED_IDLE             /* Not used                       */
+#define LED_STARTED       0     /* NuttX has been started  OFF    */
+#define LED_HEAPALLOCATE  0     /* Heap has been allocated OFF    */
+#define LED_IRQSENABLED   0     /* Interrupts enabled      OFF    */
+#define LED_STACKCREATED  1     /* Idle stack created      ON     */
+#define LED_INIRQ         2     /* In an interrupt         N/C    */
+#define LED_SIGNAL        2     /* In a signal handler     N/C    */
+#define LED_ASSERTION     2     /* An assertion failed     N/C    */
+#define LED_PANIC         3     /* The system has crashed  FLASH  */
+#undef  LED_IDLE                /* Not used                       */
 
 /* Thus if the LED is statically on, NuttX has successfully  booted and is,
  * apparently, running normally.  If the LED is flashing at approximately
  * 2Hz, then a fatal error has been detected and the system has halted.
  */
 
-/* Button definitions ***************************************************************/
+/****************************************************************************
+ * Button definitions
+ */
 
 /* The IMXRT board has one external user button
  *
@@ -169,7 +201,9 @@
 
 #define BUTTON_SW8_BIT    (1 << BUTTON_SW8)
 
-/* SDIO *****************************************************************************/
+/****************************************************************************
+ * SDIO
+ */
 
 /* Pin drive characteristics - drive strength in particular may need tuning for
  * specific boards, but has been checked by scope on the EVKB to make sure shapes
@@ -207,7 +241,10 @@
 #define BOARD_USDHC_SD4MODE_PRESCALER   USDHC_SYSCTL_SDCLKFS_DIV8
 #define BOARD_USDHC_SD4MODE_DIVISOR     USDHC_SYSCTL_DVS_DIV(1)
 
-/* ETH Disambiguation ***************************************************************/
+/****************************************************************************
+ * ETH Disambiguation
+ */
+
 #define GPIO_ENET_MDIO                  GPIO_ENET_MDIO_3
 #define GPIO_ENET_MDC                   GPIO_ENET_MDC_3
 #define GPIO_ENET_RX_EN                 GPIO_ENET_RX_EN_1
@@ -215,7 +252,9 @@
 #define GPIO_ENET_TX_CLK                GPIO_ENET_TX_CLK_1
 #define GPIO_ENET_TX_EN                 GPIO_ENET_TX_EN_1
 
-/* PIO Disambiguation ***************************************************************/
+/****************************************************************************
+ * GPIO Disambiguation
+ */
 
 /* LPUARTs
  *
@@ -232,8 +271,8 @@
  *   J22 D1 UART_TX/D1  GPIO_AD_B1_06  LPUART3_TX
  */
 
-#define GPIO_LPUART3_RX   GPIO_LPUART3_RX_1  /* GPIO_AD_B1_07 */
-#define GPIO_LPUART3_TX   GPIO_LPUART3_TX_1  /* GPIO_AD_B1_06 */
+#define GPIO_LPUART3_RX   GPIO_LPUART3_RX_1     /* GPIO_AD_B1_07 */
+#define GPIO_LPUART3_TX   GPIO_LPUART3_TX_1     /* GPIO_AD_B1_06 */
 
 /* LPI2Cs
  *
@@ -243,11 +282,11 @@
  *   J23 A5 A5/ADC5/SCL  GPIO_AD_B1_00  LPI2C1_SCL
  */
 
-#define GPIO_LPI2C1_SDA   GPIO_LPI2C1_SDA_2  /* GPIO_AD_B1_01 */
-#define GPIO_LPI2C1_SCL   GPIO_LPI2C1_SCL_2  /* GPIO_AD_B1_00 */
+#define GPIO_LPI2C1_SDA   GPIO_LPI2C1_SDA_2     /* GPIO_AD_B1_01 */
+#define GPIO_LPI2C1_SCL   GPIO_LPI2C1_SCL_2     /* GPIO_AD_B1_00 */
 
-#define GPIO_LPI2C3_SDA   GPIO_LPI2C3_SDA_2  /* GPIO_AD_B1_01 */
-#define GPIO_LPI2C3_SCL   GPIO_LPI2C3_SCL_2  /* GPIO_AD_B1_00 */
+#define GPIO_LPI2C3_SDA   GPIO_LPI2C3_SDA_2     /* GPIO_AD_B1_01 */
+#define GPIO_LPI2C3_SCL   GPIO_LPI2C3_SCL_2     /* GPIO_AD_B1_00 */
 
 /* LPSPI
  *
@@ -258,17 +297,17 @@
  *   J24 D15   GPIO_AD_B0_00  LPSPI3_SCK
  */
 
-#define GPIO_LPSPI3_SCK   GPIO_LPSPI3_SCK_2 /* GPIO_AD_B0_00 */
-#define GPIO_LPSPI3_MISO  GPIO_LPSPI3_SDI_2 /* GPIO_AD_B0_02 */
-#define GPIO_LPSPI3_MOSI  GPIO_LPSPI3_SDO_2 /* GPIO_AD_B0_01 */
+#define GPIO_LPSPI3_SCK   GPIO_LPSPI3_SCK_2     /* GPIO_AD_B0_00 */
+#define GPIO_LPSPI3_MISO  GPIO_LPSPI3_SDI_2     /* GPIO_AD_B0_02 */
+#define GPIO_LPSPI3_MOSI  GPIO_LPSPI3_SDO_2     /* GPIO_AD_B0_01 */
 
-/************************************************************************************
+/****************************************************************************
  * Public Types
- ************************************************************************************/
+ ****************************************************************************/
 
-/************************************************************************************
+/****************************************************************************
  * Public Data
- ************************************************************************************/
+ ****************************************************************************/
 
 #ifndef __ASSEMBLY__
 
@@ -281,9 +320,9 @@ extern "C"
 #define EXTERN extern
 #endif
 
-/************************************************************************************
+/****************************************************************************
  * Public Functions
- ************************************************************************************/
+ ****************************************************************************/
 
 #undef EXTERN
 #if defined(__cplusplus)

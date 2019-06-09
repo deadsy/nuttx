@@ -2,8 +2,9 @@
  * config/imxrt1020-evk/src/imxrt_bringup.c
  *
  *   Copyright (C) 2018 Gregory Nutt. All rights reserved.
- *   Author: Gregory Nutt <gnutt@nuttx.org>
- *           Dave Marples <dave@marples.net>
+ *   Authors: Gregory Nutt <gnutt@nuttx.org>
+ *            Dave Marples <dave@marples.net>
+ *            Jason T. Harris <sirmanlypowers@gmail.com>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -51,21 +52,21 @@
 #include <nuttx/wireless/bluetooth/bt_uart.h>
 
 #ifdef CONFIG_IMXRT_USDHC
-#  include "imxrt_usdhc.h"
+#include "imxrt_usdhc.h"
 #endif
 
 #ifdef CONFIG_IMXRT_ENET
-#  include "imxrt_enet.h"
+#include "imxrt_enet.h"
 #endif
 
 #ifdef CONFIG_IMXRT_LPSPI
-#  include "nuttx/spi/spi_transfer.h"
-#  include <imxrt_lpspi.h>
+#include "nuttx/spi/spi_transfer.h"
+#include <imxrt_lpspi.h>
 #endif
 
 #include "imxrt1020-evk.h"
 
-#include <arch/board/board.h>  /* Must always be included last */
+#include <arch/board/board.h>   /* Must always be included last */
 
 /****************************************************************************
  * Pre-processor Definitions
@@ -74,9 +75,9 @@
 /* Checking needed by MMC/SDCard */
 
 #ifdef CONFIG_NSH_MMCSDMINOR
-#  define MMCSD_MINOR CONFIG_NSH_MMCSDMINOR
+#define MMCSD_MINOR CONFIG_NSH_MMCSDMINOR
 #else
-#  define MMCSD_MINOR 0
+#define MMCSD_MINOR 0
 #endif
 
 /****************************************************************************
@@ -104,14 +105,13 @@ static void imxrt_i2c_register(int bus)
         }
     }
 }
-#endif
+#endif /*CONFIG_I2C_DRIVER && CONFIG_IMXRT_LPI2C */
 
 #if defined(CONFIG_SPI_DRIVER) && defined(CONFIG_IMXRT_LPSPI)
-static void imxrt_spi_register(int bus) 
-
-{ 
+static void imxrt_spi_register(int bus)
+{
   FAR struct spi_dev_s *spi;
-  int                   ret;
+  int ret;
 
   spi = imxrt_lpspibus_initialize(bus);
   if (spi == NULL)
@@ -126,8 +126,8 @@ static void imxrt_spi_register(int bus)
           serr("ERROR: Failed to register SPI%d driver: %d\n", bus, ret);
         }
     }
-}  
-#endif
+}
+#endif /*CONFIG_SPI_DRIVER && CONFIG_IMXRT_LPSPI */
 
 #ifdef CONFIG_IMXRT_USDHC
 static int nsh_sdmmc_initialize(void)
@@ -150,15 +150,12 @@ static int nsh_sdmmc_initialize(void)
       if (ret != OK)
         {
           syslog(LOG_ERR,
-                 "ERROR: Failed to bind SDIO to the MMC/SD driver: %d\n",
-                 ret);
+                 "ERROR: Failed to bind SDIO to the MMC/SD driver: %d\n", ret);
         }
     }
   return OK;
-  }
-#else
-#  define nsh_sdmmc_initialize() (OK)
-#endif
+}
+#endif /*CONFIG_IMXRT_USDHC */
 
 /****************************************************************************
  * Public Functions
@@ -182,56 +179,12 @@ int imxrt_bringup(void)
    * map file for confirmation, see what's at offset 0x1000 in the image
    * (clue: nothing, nada, zilch...it's not there).
    */
-  ret = (g_boot_data.start==0);
-  
+  ret = (g_boot_data.start == 0);
+
   /* If we got here then perhaps not all initialization was successful, but
    * at least enough succeeded to bring-up NSH with perhaps reduced
    * capabilities.
    */
-
-#ifdef CONFIG_FS_PROCFS
-  /* Mount the procfs file system */
-
-  ret = mount(NULL, "/proc", "procfs", 0, NULL);
-  if (ret < 0)
-    {
-      syslog(LOG_ERR, "ERROR: Failed to mount procfs at /proc: %d\n", ret);
-    }
-#endif
-
-#if defined(CONFIG_I2C_DRIVER) 
-#if defined(CONFIG_IMXRT_LPI2C1)
-  imxrt_i2c_register(1);
-#endif
-#if defined(CONFIG_IMXRT_LPI2C4)
-  imxrt_i2c_register(4);
-#endif
-#endif
-
-#if defined(CONFIG_SPI_DRIVER)
-#if defined(CONFIG_IMXRT_LPSPI1)
-  imxrt_config_gpio(GPIO_LPSPI1_CS);
-  imxrt_spi_register(1);
-#endif
-#if defined(CONFIG_IMXRT_LPSPI2)
-  imxrt_config_gpio(GPIO_LPSPI2_CS);
-  imxrt_spi_register(2);
-#endif
-#if defined(CONFIG_IMXRT_LPSPI3)
-  imxrt_config_gpio(GPIO_LPSPI3_CS);
-  imxrt_spi_register(3);
-#endif
-#if defined(CONFIG_IMXRT_LPSPI4)
-  imxrt_config_gpio(GPIO_LPSPI4_CS);
-  imxrt_spi_register(4);
-#endif
-#endif
-
-#ifdef CONFIG_IMXRT_USDHC
-  /* Initialize SDHC-base MMC/SD card support */
-
-  nsh_sdmmc_initialize();
-#endif
 
 #ifdef CONFIG_DEV_GPIO
   ret = imxrt_gpio_initialize();
@@ -240,28 +193,49 @@ int imxrt_bringup(void)
       syslog(LOG_ERR, "Failed to initialize GPIO Driver: %d\n", ret);
       return ret;
     }
+#endif /*CONFIG_DEV_GPIO */
 
+#ifdef CONFIG_I2C_DRIVER
+#ifdef CONFIG_IMXRT_LPI2C1
+  imxrt_i2c_register(1);
 #endif
-  void *hci_uart_getdevice(char *path);
+#ifdef CONFIG_IMXRT_LPI2C2
+  imxrt_i2c_register(2);
+#endif
+#ifdef CONFIG_IMXRT_LPI2C3
+  imxrt_i2c_register(3);
+#endif
+#ifdef CONFIG_IMXRT_LPI2C4
+  imxrt_i2c_register(4);
+#endif
+#endif /* CONFIG_I2C_DRIVER */
 
-  imxrt_config_gpio(GPIO_WL_32K);
-  imxrt_config_gpio(GPIO_BTUART_RST);
-  imxrt_config_gpio(GPIO_BTUART_WAKE);
-  imxrt_config_gpio(GPIO_WL_REGON);
+#ifdef CONFIG_SPI_DRIVER
+#ifdef CONFIG_IMXRT_LPSPI1
+  imxrt_config_gpio(GPIO_LPSPI1_CS);
+  imxrt_spi_register(1);
+#endif
+#ifdef CONFIG_IMXRT_LPSPI2
+  imxrt_config_gpio(GPIO_LPSPI2_CS);
+  imxrt_spi_register(2);
+#endif
+#ifdef CONFIG_IMXRT_LPSPI3
+  imxrt_config_gpio(GPIO_LPSPI3_CS);
+  imxrt_spi_register(3);
+#endif
+#ifdef CONFIG_IMXRT_LPSPI4
+  imxrt_config_gpio(GPIO_LPSPI4_CS);
+  imxrt_spi_register(4);
+#endif
+#endif /* CONFIG_SPI_DRIVER */
 
-  void *h=hci_uart_getdevice("/dev/ttyS2");
-  if (!h)
-  {
-      syslog(LOG_ERR, "Failed to connect to HCI UART\n");
-      return -ENFILE;
-  }
+#ifdef CONFIG_FS_PROCFS
+  ret = mount(NULL, "/proc", "procfs", 0, NULL);
+  if (ret < 0)
+    {
+      syslog(LOG_ERR, "ERROR: Failed to mount procfs at /proc: %d\n", ret);
+    }
+#endif /*CONFIG_FS_PROCFS */
 
-imxrt_gpio_write(GPIO_BTUART_RST,true);
-imxrt_gpio_write(GPIO_BTUART_WAKE,true);
-
-  ret = btuart_register(h);
-  
-    UNUSED(ret);
-    return OK;
+  return ret;
 }
-

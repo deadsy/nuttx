@@ -72,11 +72,11 @@
 void weak_function imxrt_spidev_initialize(void)
 {
 #ifdef CONFIG_IMXRT_LPSPI1
-  (void)imxrt_config_gpio(GPIO_LPSPI1_CS); /* LPSPI1 chip select */
+  (void)imxrt_config_gpio(GPIO_LPSPI1_CS);      /* LPSPI1 chip select */
   (void)imxrt_config_gpio(GPIO_MMCSD_EN);
 #endif
 #ifdef CONFIG_IMXRT_LPSPI3
-  (void)imxrt_config_gpio(GPIO_LPSPI3_CS); /* LPSPI3 chip select */
+  (void)imxrt_config_gpio(GPIO_LPSPI3_CS);      /* LPSPI3 chip select */
 #endif
 }
 
@@ -106,7 +106,8 @@ void weak_function imxrt_spidev_initialize(void)
  ****************************************************************************/
 
 #ifdef CONFIG_IMXRT_LPSPI1
-void imxrt_lpspi1select(FAR struct spi_dev_s *dev, uint32_t devid, bool selected)
+void imxrt_lpspi1select(FAR struct spi_dev_s *dev, uint32_t devid,
+                        bool selected)
 {
   spiinfo("devid: %d CS: %s\n", (int)devid, selected ? "assert" : "de-assert");
 
@@ -120,7 +121,8 @@ uint8_t imxrt_lpspi1status(FAR struct spi_dev_s *dev, uint32_t devid)
 #endif
 
 #ifdef CONFIG_IMXRT_LPSPI2
-void imxrt_lpspi2select(FAR struct spi_dev_s *dev, uint32_t devid, bool selected)
+void imxrt_lpspi2select(FAR struct spi_dev_s *dev, uint32_t devid,
+                        bool selected)
 {
   spiinfo("devid: %d CS: %s\n", (int)devid, selected ? "assert" : "de-assert");
 
@@ -134,7 +136,8 @@ uint8_t imxrt_lpspi2status(FAR struct spi_dev_s *dev, uint32_t devid)
 #endif
 
 #ifdef CONFIG_IMXRT_LPSPI3
-void imxrt_lpspi3select(FAR struct spi_dev_s *dev, uint32_t devid, bool selected)
+void imxrt_lpspi3select(FAR struct spi_dev_s *dev, uint32_t devid,
+                        bool selected)
 {
   spiinfo("devid: %d CS: %s\n", (int)devid, selected ? "assert" : "de-assert");
 
@@ -148,7 +151,8 @@ uint8_t imxrt_lpspi3status(FAR struct spi_dev_s *dev, uint32_t devid)
 #endif
 
 #ifdef CONFIG_IMXRT_LPSPI4
-void imxrt_lpspi4select(FAR struct spi_dev_s *dev, uint32_t devid, bool selected)
+void imxrt_lpspi4select(FAR struct spi_dev_s *dev, uint32_t devid,
+                        bool selected)
 {
   spiinfo("devid: %d CS: %s\n", (int)devid, selected ? "assert" : "de-assert");
 

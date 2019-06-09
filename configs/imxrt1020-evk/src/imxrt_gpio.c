@@ -77,11 +77,11 @@ struct imxrtgpio_dev_s
  ****************************************************************************/
 
 #if BOARD_NGPIOIN > 0
-static int gpin_read(FAR struct gpio_dev_s *dev, FAR bool *value);
+static int gpin_read(FAR struct gpio_dev_s *dev, FAR bool * value);
 #endif
 
 #if BOARD_NGPIOOUT > 0
-static int gpout_read(FAR struct gpio_dev_s *dev, FAR bool *value);
+static int gpout_read(FAR struct gpio_dev_s *dev, FAR bool * value);
 static int gpout_write(FAR struct gpio_dev_s *dev, bool value);
 #endif
 
@@ -89,19 +89,17 @@ static int gpout_write(FAR struct gpio_dev_s *dev, bool value);
  * Private Data
  ****************************************************************************/
 
- #if BOARD_NGPIOIN > 0
-static const struct gpio_operations_s gpin_ops =
-{
-  .go_read   = gpin_read,
-  .go_write  = NULL,
+#if BOARD_NGPIOIN > 0
+static const struct gpio_operations_s gpin_ops = {
+  .go_read = gpin_read,
+  .go_write = NULL,
   .go_attach = NULL,
   .go_enable = NULL,
 };
 
 /* This array maps the GPIO pins used as INPUT */
 
-static const uint32_t g_gpioinputs[BOARD_NGPIOIN] =
-{
+static const uint32_t g_gpioinputs[BOARD_NGPIOIN] = {
   GPIO_IN1,
 };
 
@@ -110,18 +108,16 @@ static struct imxrtgpio_dev_s g_gpin[BOARD_NGPIOIN];
 
 #if BOARD_NGPIOOUT > 0
 
-static const struct gpio_operations_s gpout_ops =
-{
-  .go_read   = gpout_read,
-  .go_write  = gpout_write,
+static const struct gpio_operations_s gpout_ops = {
+  .go_read = gpout_read,
+  .go_write = gpout_write,
   .go_attach = NULL,
   .go_enable = NULL,
 };
 
 /* This array maps the GPIO pins used as OUTPUT */
 
-static const uint32_t g_gpiooutputs[BOARD_NGPIOOUT] =
-{
+static const uint32_t g_gpiooutputs[BOARD_NGPIOOUT] = {
   GPIO_GOUT1,
   GPIO_GOUT2,
   GPIO_GOUT3,
@@ -136,7 +132,7 @@ static struct imxrtgpio_dev_s g_gpout[BOARD_NGPIOOUT];
  ****************************************************************************/
 
 #if BOARD_NGPIOIN > 0
-static int gpin_read(FAR struct gpio_dev_s *dev, FAR bool *value)
+static int gpin_read(FAR struct gpio_dev_s *dev, FAR bool * value)
 {
   FAR struct imxrtgpio_dev_s *imxrtgpio = (FAR struct imxrtgpio_dev_s *)dev;
 
@@ -150,7 +146,7 @@ static int gpin_read(FAR struct gpio_dev_s *dev, FAR bool *value)
 #endif
 
 #if BOARD_NGPIOOUT > 0
-static int gpout_read(FAR struct gpio_dev_s *dev, FAR bool *value)
+static int gpout_read(FAR struct gpio_dev_s *dev, FAR bool * value)
 {
   FAR struct imxrtgpio_dev_s *imxrtgpio = (FAR struct imxrtgpio_dev_s *)dev;
 
@@ -198,8 +194,8 @@ int imxrt_gpio_initialize(void)
       /* Setup and register the GPIO pin */
 
       g_gpin[i].gpio.gp_pintype = GPIO_INPUT_PIN;
-      g_gpin[i].gpio.gp_ops     = &gpin_ops;
-      g_gpin[i].id              = i;
+      g_gpin[i].gpio.gp_ops = &gpin_ops;
+      g_gpin[i].id = i;
 
       (void)gpio_pin_register(&g_gpin[i].gpio, pincount);
 
@@ -217,8 +213,8 @@ int imxrt_gpio_initialize(void)
       /* Setup and register the GPIO pin */
 
       g_gpout[i].gpio.gp_pintype = GPIO_OUTPUT_PIN;
-      g_gpout[i].gpio.gp_ops     = &gpout_ops;
-      g_gpout[i].id              = i;
+      g_gpout[i].gpio.gp_ops = &gpout_ops;
+      g_gpout[i].id = i;
 
       (void)gpio_pin_register(&g_gpout[i].gpio, pincount);
 

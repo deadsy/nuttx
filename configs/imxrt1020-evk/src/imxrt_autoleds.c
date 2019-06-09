@@ -1,8 +1,9 @@
 /****************************************************************************
  * configs/imxrt1020-evk/include/imxrt_autoleds.c
  *
- *   Copyright (C) 2018 Gregory Nutt. All rights reserved.
- *   Author: Gregory Nutt <gnutt@nuttx.org>
+ *   Copyright (C) 2019 Gregory Nutt. All rights reserved.
+ *   Authors: Gregory Nutt <gnutt@nuttx.org>
+ *            Jason T. Harris <sirmanlypowers@gmail.com>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -33,42 +34,42 @@
  *
  ****************************************************************************/
 
-/*
- * TODO There are four LED status indicators.
- * The functions of these LEDs are:
- *
- *   - Main 3v3 Supply (LED4, D11)
- *   - LED1 D1  GPIO_EMC_21 (GPIO2 bit 21)
- *   - LED2 D3  GPIO_EMC_22 (GPIO2 bit 22)
- *   - LED3 D5  GPIO_EMC_24 (GPIO2 bit 24)
- *
- * LED1-3 are under software control
- */
-
  /*
- * This LED is not used by the board port unless CONFIG_ARCH_LEDS is
- * defined.  In that case, the usage by the board port is defined in
- * include/board.h and src/imxrt_autoleds.c. The LED is used to encode
- * OS-related events as follows:
- *
- *   -------------------- ----------------------- ------
- *   SYMBOL               Meaning                 LED
- *   -------------------- ----------------------- ------
- *
- *   LED_STARTED       0  NuttX has been started  OFF
- *   LED_HEAPALLOCATE  0  Heap has been allocated OFF
- *   LED_IRQSENABLED   0  Interrupts enabled      OFF
- *   LED_STACKCREATED  1  Idle stack created      ON
- *   LED_INIRQ         2  In an interrupt         N/C
- *   LED_SIGNAL        2  In a signal handler     N/C
- *   LED_ASSERTION     2  An assertion failed     N/C
- *   LED_PANIC         3  The system has crashed  FLASH
- *   LED_IDLE             Not used
- *
- * Thus if the LED is statically on, NuttX has successfully  booted and is,
- * apparently, running normally.  If the LED is flashing at approximately
- * 2Hz, then a fatal error has been detected and the system has halted.
- */
+  * There are four LED status indicators located on the EVK Board.  The
+  * functions of these LEDs include:
+  *
+  * - Main Power Supply(D3)
+  *   Green: DC 5V main supply is normal.
+  *   Red:   J2 input voltage is over 5.6V.
+  *   Off:   The board is not powered.
+  * - Reset RED LED(D15)
+  * - OpenSDA LED(D16)
+  * - USER LED(D5)
+  *
+  * Only a single LED, D5, is under software control.  It connects to
+  * GPIO_AD_B0_05 which is shared with JTAG_nTRST.
+  *
+  * This LED is not used by the board port unless CONFIG_ARCH_LEDS is
+  * defined.  In that case, the usage by the board port is defined in
+  * include/board.h and src/imxrt_autoleds.c. The LED is used to encode
+  * OS-related events as follows:
+  *
+  * ------------------- ----------------------- ------
+  * SYMBOL              Meaning                 LED
+  * ------------------- ----------------------- ------
+  * LED_STARTED         NuttX has been started  OFF
+  * LED_HEAPALLOCATE    Heap has been allocated OFF
+  * LED_IRQSENABLED     Interrupts enabled      OFF
+  * LED_STACKCREATED    Idle stack created      ON
+  * LED_INIRQ           In an interrupt         N/C
+  * LED_SIGNAL          In a signal handler     N/C
+  * LED_ASSERTION       An assertion failed     N/C
+  * LED_PANIC           The system has crashed  FLASH
+  *
+  * Thus if the LED is statically on, NuttX has successfully  booted and is,
+  * apparently, running normally.  If the LED is flashing at approximately
+  * 2Hz, then a fatal error has been detected and the system has halted.
+  */
 
 /****************************************************************************
  * Included Files
@@ -108,7 +109,7 @@ void imxrt_autoled_initialize(void)
 {
   /* Configure LED GPIO for output */
 
-  imxrt_config_gpio(GPIO_LED2);
+  imxrt_config_gpio(GPIO_LED);
 }
 
 /****************************************************************************
@@ -132,19 +133,19 @@ void board_autoled_on(int led)
 
   switch (led)
     {
-      case 0:  /* LED Off */
-        ledoff = true;
-        break;
+    case 0:                    /* LED Off */
+      ledoff = true;
+      break;
 
-      case 2:  /* LED No change */
-        return;
+    case 2:                    /* LED No change */
+      return;
 
-      case 1:  /* LED On */
-      case 3:  /* LED On */
-        break;
+    case 1:                    /* LED On */
+    case 3:                    /* LED On */
+      break;
     }
 
-  imxrt_gpio_write(GPIO_LED2, ledoff); /* Low illuminates */
+  imxrt_gpio_write(GPIO_LED, ledoff);   /* Low illuminates */
 }
 
 /****************************************************************************
@@ -166,16 +167,16 @@ void board_autoled_off(int led)
 {
   switch (led)
     {
-      case 0:  /* LED Off */
-      case 1:  /* LED Off */
-      case 3:  /* LED Off */
-        break;
+    case 0:                    /* LED Off */
+    case 1:                    /* LED Off */
+    case 3:                    /* LED Off */
+      break;
 
-      case 2:  /* LED No change */
-        return;
+    case 2:                    /* LED No change */
+      return;
     }
 
-  imxrt_gpio_write(GPIO_LED2, true); /* Low illuminates */
+  imxrt_gpio_write(GPIO_LED, true);     /* Low illuminates */
 }
 
 #endif /* CONFIG_ARCH_LEDS */

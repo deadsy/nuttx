@@ -57,7 +57,33 @@
  * Pre-processor Definitions
  ****************************************************************************/
 
-                  
+/****************************************************************************
+ * Configuration
+ */
+
+/* LEDS
+ * There are four LED status indicators located on the EVK Board.  The
+ * functions of these LEDs include:
+ *
+ * - Main Power Supply(D3)
+ *   Green: DC 5V main supply is normal.
+ *   Red:   J2 input voltage is over 5.6V.
+ *   Off:   The board is not powered.
+ * - Reset RED LED(D15)
+ * - OpenSDA LED(D16)
+ * - USER LED(D5)
+ *
+ * Only a single LED, D5, is under software control.  It connects to
+ * GPIO_AD_B0_05 which is shared with JTAG_nTRST.
+ * This pin must be configured as ALT5, GPIO1_IO05
+ */
+
+#define IOMUX_LED (IOMUX_PULL_NONE | IOMUX_CMOS_OUTPUT | \
+                   IOMUX_DRIVE_40OHM | IOMUX_SPEED_MEDIUM | \
+                   IOMUX_SLEW_SLOW)
+
+#define GPIO_LED (GPIO_OUTPUT | GPIO_OUTPUT_ZERO | GPIO_PORT1 | \
+                  GPIO_PIN5 | IOMUX_LED)
 
 /****************************************************************************
  * Public Types

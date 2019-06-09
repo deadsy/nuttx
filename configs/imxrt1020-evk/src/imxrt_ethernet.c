@@ -42,10 +42,10 @@
 /* Force verbose debug on in this file only to support unit-level testing. */
 
 #ifdef CONFIG_NETDEV_PHY_DEBUG
-#  undef  CONFIG_DEBUG_INFO
-#  define CONFIG_DEBUG_INFO 1
-#  undef  CONFIG_DEBUG_NET
-#  define CONFIG_DEBUG_NET 1
+#undef  CONFIG_DEBUG_INFO
+#define CONFIG_DEBUG_INFO 1
+#undef  CONFIG_DEBUG_NET
+#define CONFIG_DEBUG_NET 1
 #endif
 
 #include <string.h>
@@ -75,13 +75,13 @@
  */
 
 #ifdef CONFIG_NETDEV_PHY_DEBUG
-#  define phyerr    _err
-#  define phywarn   _warn
-#  define phyinfo   _info
+#define phyerr    _err
+#define phywarn   _warn
+#define phyinfo   _info
 #else
-#  define phyerr(x...)
-#  define phywarn(x...)
-#  define phyinfo(x...)
+#define phyerr(x...)
+#define phywarn(x...)
+#define phyinfo(x...)
 #endif
 
 /************************************************************************************
@@ -150,7 +150,7 @@ int imxrt_phy_boardinitialize(int intf)
   imxrt_config_gpio(GPIO_ENET_RST);
 
   /* Take the PHY out of reset. */
-  imxrt_gpio_write(GPIO_ENET_RST, true);  
+  imxrt_gpio_write(GPIO_ENET_RST, true);
 
   return OK;
 }
@@ -219,7 +219,7 @@ int imxrt_phy_boardinitialize(int intf)
 
 #ifdef GPIO_ENET_IRQ
 int arch_phy_irq(FAR const char *intf, xcpt_t handler, void *arg,
-                 phy_enable_t *enable)
+                 phy_enable_t * enable)
 {
   irqstate_t flags;
   phy_enable_t enabler;
@@ -232,7 +232,7 @@ int arch_phy_irq(FAR const char *intf, xcpt_t handler, void *arg,
 
   if (strcmp(intf, IMXRT_ENET_DEVNAME) == 0)
     {
-      irq     = GPIO_ENET_IRQ;
+      irq = GPIO_ENET_IRQ;
       enabler = imxrt_enet_phy_enable;
     }
   else

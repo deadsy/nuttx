@@ -82,16 +82,16 @@ void board_userled_initialize(void)
 
 void board_userled(int led, bool ledon)
 {
-  switch(led)
+  switch (led)
     {
     case 0:
-      imxrt_gpio_write(GPIO_LED1, !ledon);  /* Low illuminates */
+      imxrt_gpio_write(GPIO_LED1, !ledon);      /* Low illuminates */
       break;
     case 1:
-      imxrt_gpio_write(GPIO_LED2, !ledon);  /* Low illuminates */
+      imxrt_gpio_write(GPIO_LED2, !ledon);      /* Low illuminates */
       break;
     case 2:
-      imxrt_gpio_write(GPIO_LED3, !ledon);  /* Low illuminates */
+      imxrt_gpio_write(GPIO_LED3, !ledon);      /* Low illuminates */
       break;
     default:
       break;
@@ -105,7 +105,7 @@ void board_userled(int led, bool ledon)
 void board_userled_all(uint8_t ledset)
 {
   /* Low illuminates */
-  
+
   imxrt_gpio_write(GPIO_LED1, (ledset & BOARD_USERLED1_BIT));
   imxrt_gpio_write(GPIO_LED2, (ledset & BOARD_USERLED2_BIT));
   imxrt_gpio_write(GPIO_LED3, (ledset & BOARD_USERLED3_BIT));

@@ -59,7 +59,7 @@
   ((((major) & IVT_MAJOR_VERSION_MASK) << IVT_MAJOR_VERSION_SHIFT) |  \
   (((minor) & IVT_MINOR_VERSION_MASK) << IVT_MINOR_VERSION_SHIFT))
 
-#define IVT_TAG_HEADER              (0xd1)       /* Image Vector Table */
+#define IVT_TAG_HEADER              (0xd1)      /* Image Vector Table */
 #define IVT_SIZE                    0x2000
 #define IVT_PAR                     IVT_VERSION(IVT_MAJOR_VERSION, IVT_MINOR_VERSION)
 
@@ -77,7 +77,7 @@
 #define FLASH_END                   0x7f7fffff
 #define SCLK 1
 
-#  define DCD_ADDRESS               0
+#define DCD_ADDRESS               0
 
 #define BOOT_DATA_ADDRESS           &g_boot_data
 #define CSF_ADDRESS                 0
@@ -117,11 +117,11 @@ struct ivt_s
 
   uint32_t boot_data;
 
-  /* Absolute address of the IVT.*/
+  /* Absolute address of the IVT. */
 
   uint32_t self;
 
-  /* Absolute address of the image CSF.*/
+  /* Absolute address of the image CSF. */
 
   uint32_t csf;
 
@@ -134,10 +134,10 @@ struct ivt_s
 
 struct boot_data_s
 {
-  uint32_t start;           /* boot start location */
-  uint32_t size;            /* size */
-  uint32_t plugin;          /* plugin flag - 1 if downloaded application is plugin */
-  uint32_t placeholder;     /* placehoder to make even 0x10 size */
+  uint32_t start;               /* boot start location */
+  uint32_t size;                /* size */
+  uint32_t plugin;              /* plugin flag - 1 if downloaded application is plugin */
+  uint32_t placeholder;         /* placehoder to make even 0x10 size */
 };
 
 /****************************************************************************

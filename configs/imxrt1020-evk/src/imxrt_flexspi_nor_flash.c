@@ -38,7 +38,6 @@
  * Included Files
  ******************************************************************************/
 
-
 #include "imxrt_flexspi_nor_flash.h"
 
 /*******************************************************************************
@@ -58,62 +57,88 @@
  * a 4K block read)
  */
 
-__attribute__((section(".boot_hdr.conf")))
-const struct flexspi_nor_config_s flash_config =
-{
-  .mem_config =
-  {
-    .tag                    = FLEXSPI_CFG_BLK_TAG,
-    .version                = FLEXSPI_CFG_BLK_VERSION,
-    .read_sample_clksrc     = FLASH_READ_SAMPLE_CLK_LOOPBACK_INTERNELLY,
-    .cs_hold_time           = 3u,
-    .cs_setup_time          = 3u,
-    .device_mode_cfg_enable = true,    
-    .device_mode_seq.seq_num= 1,
-    .device_mode_seq.seq_id = 4,     /* These commands set the Quad bit */ 
-    .device_mode_arg        = 0x40,  /* on the flash to drive 4 pins.   */
-    .device_type            = FLEXSPI_DEVICE_TYPE_SERIAL_NOR,
-    .sflash_pad_type        = SERIAL_FLASH_4PADS,    
-    .serial_clk_freq        = FLEXSPI_SERIAL_CLKFREQ_100MHz,
-    .sflash_a1size          = 8u * 1024u * 1024u,
-    .data_valid_time        = {16u, 16u},
-    /* .controller_misc_option = (1 << FLEXSPIMISC_OFFSET_PAD_SETTING_OVERRIDE_EN), */
-    /* .cspad_setting_override =   1|(1<<3)|(3<<6),  */
-    /* .sclkpad_setting_override = (7<<3)|(3<<6),  */
-    /* .datapad_setting_override = (2<<3)|(3<<6),  */
-    /* .dqspad_setting_override = 0, */
+__attribute__ ((section(".boot_hdr.conf")))
+     const struct flexspi_nor_config_s flash_config = {
+       .mem_config = {
+                      .tag = FLEXSPI_CFG_BLK_TAG,
+                      .version = FLEXSPI_CFG_BLK_VERSION,
+                      .read_sample_clksrc =
+                      FLASH_READ_SAMPLE_CLK_LOOPBACK_INTERNELLY,
+                      .cs_hold_time = 3u,
+                      .cs_setup_time = 3u,
+                      .device_mode_cfg_enable = true,
+                      .device_mode_seq.seq_num = 1,
+                      .device_mode_seq.seq_id = 4,      /* These commands set the Quad bit */
+                      .device_mode_arg = 0x40,  /* on the flash to drive 4 pins.   */
+                      .device_type = FLEXSPI_DEVICE_TYPE_SERIAL_NOR,
+                      .sflash_pad_type = SERIAL_FLASH_4PADS,
+                      .serial_clk_freq = FLEXSPI_SERIAL_CLKFREQ_100MHz,
+                      .sflash_a1size = 8u * 1024u * 1024u,
+                      .data_valid_time = {16u, 16u},
+                      /* .controller_misc_option = (1 << FLEXSPIMISC_OFFSET_PAD_SETTING_OVERRIDE_EN), */
+                      /* .cspad_setting_override =   1|(1<<3)|(3<<6),  */
+                      /* .sclkpad_setting_override = (7<<3)|(3<<6),  */
+                      /* .datapad_setting_override = (2<<3)|(3<<6),  */
+                      /* .dqspad_setting_override = 0, */
 
-    .lookup_table           =
-    {
-      /* 0 - Quad Input/output read sequence - with optimised XIP support */
-      [0]=FLEXSPI_LUT_SEQ(CMD_SDR, FLEXSPI_1PAD, 0xEB, RADDR_SDR, FLEXSPI_4PAD, 0x18),
-      [1]=FLEXSPI_LUT_SEQ(MODE8_SDR, FLEXSPI_4PAD, 0xA0, DUMMY_SDR, FLEXSPI_4PAD, 0x04),
-      [2]=FLEXSPI_LUT_SEQ(READ_SDR, FLEXSPI_4PAD, 0x04, JMP_ON_CS, 0, 1),
+                      .lookup_table = {
+                                       /* 0 - Quad Input/output read sequence - with optimised XIP support */
+                                       [0] =
+                                       FLEXSPI_LUT_SEQ(CMD_SDR, FLEXSPI_1PAD,
+                                                       0xEB, RADDR_SDR,
+                                                       FLEXSPI_4PAD, 0x18),
+                                       [1] =
+                                       FLEXSPI_LUT_SEQ(MODE8_SDR, FLEXSPI_4PAD,
+                                                       0xA0, DUMMY_SDR,
+                                                       FLEXSPI_4PAD, 0x04),
+                                       [2] =
+                                       FLEXSPI_LUT_SEQ(READ_SDR, FLEXSPI_4PAD,
+                                                       0x04, JMP_ON_CS, 0, 1),
 
-      /* 1 - Read Status */
-      [1*4] = FLEXSPI_LUT_SEQ(CMD_SDR, FLEXSPI_1PAD, 0x05, READ_SDR, FLEXSPI_1PAD, 0x01),
-    
-      /* 3 - Write Enable */
-      [3*4] = FLEXSPI_LUT_SEQ(CMD_SDR, FLEXSPI_1PAD, 0x06, STOP, 0, 0),
-    
-      /* 4 - Write status */
-      [4*4] = FLEXSPI_LUT_SEQ(CMD_SDR, FLEXSPI_1PAD, 0x01, WRITE_SDR, FLEXSPI_1PAD, 0x1),      
+                                       /* 1 - Read Status */
+                                       [1 * 4] =
+                                       FLEXSPI_LUT_SEQ(CMD_SDR, FLEXSPI_1PAD,
+                                                       0x05, READ_SDR,
+                                                       FLEXSPI_1PAD, 0x01),
 
-      /* 5 - Erase Sector */
-      [5*4] = FLEXSPI_LUT_SEQ(CMD_SDR, FLEXSPI_1PAD, 0xD7, RADDR_SDR, FLEXSPI_1PAD, 0x18),
-      
-      /* 9 - Page Program */
-      [9*4] = FLEXSPI_LUT_SEQ(CMD_SDR, FLEXSPI_1PAD, 0x02, RADDR_SDR, FLEXSPI_1PAD, 0x18),
-      [9*4+1] = FLEXSPI_LUT_SEQ(WRITE_SDR, FLEXSPI_1PAD, 0x8, STOP, FLEXSPI_1PAD, 0x0),
-    
-      /* 11 - Chip Erase */
-      [11*4] = FLEXSPI_LUT_SEQ(CMD_SDR, FLEXSPI_1PAD, 0xC7, STOP, FLEXSPI_1PAD, 0x0),
+                                       /* 3 - Write Enable */
+                                       [3 * 4] =
+                                       FLEXSPI_LUT_SEQ(CMD_SDR, FLEXSPI_1PAD,
+                                                       0x06, STOP, 0, 0),
 
-    },
-  },
-  
-  .page_size                = 256u,
-  .sector_size              = 4u * 1024u,
-  .blocksize                = 32u * 1024u,
-  .is_uniform_blocksize     = false,
-};
+                                       /* 4 - Write status */
+                                       [4 * 4] =
+                                       FLEXSPI_LUT_SEQ(CMD_SDR, FLEXSPI_1PAD,
+                                                       0x01, WRITE_SDR,
+                                                       FLEXSPI_1PAD, 0x1),
+
+                                       /* 5 - Erase Sector */
+                                       [5 * 4] =
+                                       FLEXSPI_LUT_SEQ(CMD_SDR, FLEXSPI_1PAD,
+                                                       0xD7, RADDR_SDR,
+                                                       FLEXSPI_1PAD, 0x18),
+
+                                       /* 9 - Page Program */
+                                       [9 * 4] =
+                                       FLEXSPI_LUT_SEQ(CMD_SDR, FLEXSPI_1PAD,
+                                                       0x02, RADDR_SDR,
+                                                       FLEXSPI_1PAD, 0x18),
+                                       [9 * 4 + 1] =
+                                       FLEXSPI_LUT_SEQ(WRITE_SDR, FLEXSPI_1PAD,
+                                                       0x8, STOP, FLEXSPI_1PAD,
+                                                       0x0),
+
+                                       /* 11 - Chip Erase */
+                                       [11 * 4] =
+                                       FLEXSPI_LUT_SEQ(CMD_SDR, FLEXSPI_1PAD,
+                                                       0xC7, STOP, FLEXSPI_1PAD,
+                                                       0x0),
+
+                                       },
+                      },
+
+       .page_size = 256u,
+       .sector_size = 4u * 1024u,
+       .blocksize = 32u * 1024u,
+       .is_uniform_blocksize = false,
+     };

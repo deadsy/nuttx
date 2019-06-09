@@ -55,20 +55,20 @@
  * Pre-processor Definitions
  ****************************************************************************/
 
-#ifndef CONFIG_IMXRT_LPSPI1 
-#  error "SD driver requires CONFIG_IMXRT_LPSPI1 to be enabled"
+#ifndef CONFIG_IMXRT_LPSPI1
+#error "SD driver requires CONFIG_IMXRT_LPSPI1 to be enabled"
 #endif
 
 #ifdef CONFIG_DISABLE_MOUNTPOINT
-#  error "SD driver requires CONFIG_DISABLE_MOUNTPOINT to be disabled"
+#error "SD driver requires CONFIG_DISABLE_MOUNTPOINT to be disabled"
 #endif
 
 /*****************************************************************************
  * Private Definitions
  ****************************************************************************/
 
-static const int SD_SPI_PORT = CONFIG_NSH_MMCSDSPIPORTNO; /* SD is connected to SPI1 port */
-static const int SD_SLOT_NO  = 0; /* There is only one SD slot */
+static const int SD_SPI_PORT = CONFIG_NSH_MMCSDSPIPORTNO;       /* SD is connected to SPI1 port */
+static const int SD_SLOT_NO = 0;        /* There is only one SD slot */
 
 /*****************************************************************************
  * Private Functions
@@ -91,7 +91,7 @@ static const int SD_SLOT_NO  = 0; /* There is only one SD slot */
 
 #ifdef CONFIG_IMXRT_LPSPI1
 int imxrt_lpspi1register(struct spi_dev_s *dev, spi_mediachange_t callback,
-                       void *arg)
+                         void *arg)
 {
   spiinfo("INFO: Registering spi1 device\n");
   return OK;
