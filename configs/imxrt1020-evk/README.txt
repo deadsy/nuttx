@@ -8,11 +8,13 @@ README
     o Processor
 
       - MIMXRT1021DAG5A processor
+      - 256 KiB of on-chip RAM
+      - 96 KiB of on-chip boot ROM.
 
     o Memory
 
       - 32 MiB SDRAM memory (ISSI IS42S160J-6TLI)
-      - 8 MiB QSPI Flash (ISSI IS25LP064A-JBLE) 
+      - 8 MiB QSPI Flash (ISSI IS25LP064A-JBLE)
       - TF socket for SD card
 
     o Audio
@@ -24,6 +26,7 @@ README
 
     o Sensors
 
+      - There's a PCB footprint (U26) but the device is not populated.
       - 3 DoF Accelerometer (FXOS8700CQ)
       - 3 DoF Magnetometer (FXOS8700CQ)
 
@@ -52,7 +55,7 @@ Contents
 Serial Console
 ==============
 
-  Virtual console port provided by OpenSDA:
+  USB console port provided by OpenSDA:
 
            UART1_TXD   GPIO_AD_B0_06  LPUART1_TX
            UART1_RXD   GPIO_AD_B0_07  LPUART1_RX
@@ -115,6 +118,24 @@ LEDs and buttons
 
   Only the user button is available to the software.  It is sensed on the
   WAKEUP pin which will be pulled low when the button is pressed.
+
+Boot Selection
+==============
+
+  SW8 (on the non-component side of the board) is 4 position DIP switch
+  that controls the boot configuration:
+
+  SW8.1  BOOT_CFG[0]
+  SW8.2  BOOT_CFG[6]
+  SW8.3  BOOT_MODE[0]
+  SW8.4  BOOT_MODE[1]
+
+  Read the reference manual for details, but basically there are two modes:
+
+  0010 - boot from QSPI flash
+  0110 - boot from the SD card
+
+
 
 
 *** Reviewed to here ****
