@@ -48,7 +48,7 @@
 #include <syslog.h>
 #include <nuttx/i2c/i2c_master.h>
 #include <imxrt_lpi2c.h>
-#include <imxrt_flexspi_nor_boot.h>
+#include <imxrt_ivt.h>
 #include <nuttx/wireless/bluetooth/bt_uart.h>
 
 #ifdef CONFIG_IMXRT_USDHC

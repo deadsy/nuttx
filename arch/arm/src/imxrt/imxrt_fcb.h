@@ -1,5 +1,5 @@
 /****************************************************************************
- * configs/imrxt1020-evk/src/imxrt_flexspi_nor_flash.h
+ * arch/arm/src/imxrt/imxrt_fcb.h
  *
  *   Copyright (C) 2018 Gregory Nutt. All rights reserved.
  *   Author: Ivan Ucherdzhiev <ivanucherdjiev@gmail.com>
@@ -33,8 +33,8 @@
  *
  ****************************************************************************/
 
-#ifndef __CONFIGS_IMXRT1020_EVK_SRC_IMXRT_FLEXSPI_NOR_FLASH_H
-#define __CONFIGS_IMXRT1020_EVK_SRC_IMXRT_FLEXSPI_NOR_FLASH_H
+#ifndef __ARCH_ARM_SRC_IMXRT_IMXRT_FCB_H
+#define __ARCH_ARM_SRC_IMXRT_IMXRT_FCB_H
 
 /****************************************************************************
  * Included Files
@@ -355,4 +355,4 @@ struct flexspi_nor_config_s
   uint32_t reserve2[11];        /* Reserved for future use */
 };
 
-#endif /* __CONFIGS_IMXRT1020_EVK_SRC_IMXRT_FLEXSPI_NOR_FLASH_H */
+#endif /* __ARCH_ARM_SRC_IMXRT_IMXRT_FCB_H */
