@@ -87,12 +87,15 @@ void board_userled(int led, bool ledon)
     case 0:
       imxrt_gpio_write(GPIO_LED1, !ledon);      /* Low illuminates */
       break;
+
     case 1:
       imxrt_gpio_write(GPIO_LED2, !ledon);      /* Low illuminates */
       break;
+
     case 2:
       imxrt_gpio_write(GPIO_LED3, !ledon);      /* Low illuminates */
       break;
+
     default:
       break;
     }

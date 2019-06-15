@@ -34,42 +34,42 @@
  *
  ****************************************************************************/
 
- /*
-  * There are four LED status indicators located on the EVK Board.  The
-  * functions of these LEDs include:
-  *
-  * - Main Power Supply(D3)
-  *   Green: DC 5V main supply is normal.
-  *   Red:   J2 input voltage is over 5.6V.
-  *   Off:   The board is not powered.
-  * - Reset RED LED(D15)
-  * - OpenSDA LED(D16)
-  * - USER LED(D5)
-  *
-  * Only a single LED, D5, is under software control.  It connects to
-  * GPIO_AD_B0_05 which is shared with JTAG_nTRST.
-  *
-  * This LED is not used by the board port unless CONFIG_ARCH_LEDS is
-  * defined.  In that case, the usage by the board port is defined in
-  * include/board.h and src/imxrt_autoleds.c. The LED is used to encode
-  * OS-related events as follows:
-  *
-  * ------------------- ----------------------- ------
-  * SYMBOL              Meaning                 LED
-  * ------------------- ----------------------- ------
-  * LED_STARTED         NuttX has been started  OFF
-  * LED_HEAPALLOCATE    Heap has been allocated OFF
-  * LED_IRQSENABLED     Interrupts enabled      OFF
-  * LED_STACKCREATED    Idle stack created      ON
-  * LED_INIRQ           In an interrupt         N/C
-  * LED_SIGNAL          In a signal handler     N/C
-  * LED_ASSERTION       An assertion failed     N/C
-  * LED_PANIC           The system has crashed  FLASH
-  *
-  * Thus if the LED is statically on, NuttX has successfully  booted and is,
-  * apparently, running normally.  If the LED is flashing at approximately
-  * 2Hz, then a fatal error has been detected and the system has halted.
-  */
+/*
+ * There are four LED status indicators located on the EVK Board.  The
+ * functions of these LEDs include:
+ *
+ * - Main Power Supply(D3)
+ *   Green: DC 5V main supply is normal.
+ *   Red:   J2 input voltage is over 5.6V.
+ *   Off:   The board is not powered.
+ * - Reset RED LED(D15)
+ * - OpenSDA LED(D16)
+ * - USER LED(D5)
+ *
+ * Only a single LED, D5, is under software control.  It connects to
+ * GPIO_AD_B0_05 which is shared with JTAG_nTRST.
+ *
+ * This LED is not used by the board port unless CONFIG_ARCH_LEDS is
+ * defined.  In that case, the usage by the board port is defined in
+ * include/board.h and src/imxrt_autoleds.c. The LED is used to encode
+ * OS-related events as follows:
+ *
+ * ------------------- ----------------------- ------
+ * SYMBOL              Meaning                 LED
+ * ------------------- ----------------------- ------
+ * LED_STARTED         NuttX has been started  OFF
+ * LED_HEAPALLOCATE    Heap has been allocated OFF
+ * LED_IRQSENABLED     Interrupts enabled      OFF
+ * LED_STACKCREATED    Idle stack created      ON
+ * LED_INIRQ           In an interrupt         N/C
+ * LED_SIGNAL          In a signal handler     N/C
+ * LED_ASSERTION       An assertion failed     N/C
+ * LED_PANIC           The system has crashed  FLASH
+ *
+ * Thus if the LED is statically on, NuttX has successfully  booted and is,
+ * apparently, running normally.  If the LED is flashing at approximately
+ * 2Hz, then a fatal error has been detected and the system has halted.
+ */
 
 /****************************************************************************
  * Included Files

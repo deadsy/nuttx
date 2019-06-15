@@ -79,9 +79,9 @@
 #define phywarn   _warn
 #define phyinfo   _info
 #else
-#define phyerr(x...)
-#define phywarn(x...)
-#define phyinfo(x...)
+#define phyerr(x ...)
+#define phywarn(x ...)
+#define phyinfo(x ...)
 #endif
 
 /************************************************************************************
