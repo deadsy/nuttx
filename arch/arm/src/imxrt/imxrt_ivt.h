@@ -1,5 +1,5 @@
 /****************************************************************************
- * configs/imxrt1020-evk/src/imxrt_flexspi_nor_boot.h
+ * arch/arm/src/imxrt/imxrt_ivt.h
  *
  *   Copyright (C) 2018 Gregory Nutt. All rights reserved.
  *   Author: Ivan Ucherdzhiev <ivanucherdjiev@gmail.com>
@@ -33,8 +33,8 @@
  *
  ****************************************************************************/
 
-#ifndef __CONFIGS_IMXRT1020_EVK_SRC_IMXRT_FLEXSPI_NOR_BOOT_H
-#define __CONFIGS_IMXRT1020_EVK_SRC_IMXRT_FLEXSPI_NOR_BOOT_H
+#ifndef __ARCH_ARM_SRC_IMXRT_IMXRT_IVT_H
+#define __ARCH_ARM_SRC_IMXRT_IMXRT_IVT_H
 
 /****************************************************************************
  * Included Files
@@ -77,7 +77,11 @@
 #define FLASH_END                   0x7f7fffff
 #define SCLK 1
 
-#define DCD_ADDRESS               0
+#ifdef CONFIG_IMXRT_IVT_DCD
+#  define DCD_ADDRESS               &g_dcd_data
+#else
+#  define DCD_ADDRESS               0
+#endif
 
 #define BOOT_DATA_ADDRESS           &g_boot_data
 #define CSF_ADDRESS                 0
@@ -146,4 +150,8 @@ struct boot_data_s
 
 extern const struct boot_data_s g_boot_data;
 
-#endif /* __CONFIGS_IMXRT1020_EVK_SRC_IMXRT_FLEXSPI_NOR_BOOT_H */
+#ifdef CONFIG_IMXRT_IVT_DCD
+extern const uint8_t g_dcd_data[];
+#endif
+
+#endif /* __ARCH_ARM_SRC_IMXRT_IMXRT_IVT_H */
