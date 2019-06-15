@@ -1,8 +1,7 @@
 /****************************************************************************
- * arch/z80/src/common/z80_doirq.c
+ * arch/arm/src/cxd56xx/cxd56_wdt.h
  *
- *   Copyright (C) 2007-2009, 2014-2015 Gregory Nutt. All rights reserved.
- *   Author: Gregory Nutt <gnutt@nuttx.org>
+ *   Copyright 2018 Sony Semiconductor Solutions Corporation
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -14,9 +13,10 @@
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 3. Neither the name NuttX nor the names of its contributors may be
- *    used to endorse or promote products derived from this software
- *    without specific prior written permission.
+ * 3. Neither the name of Sony Semiconductor Solutions Corporation nor
+ *    the names of its contributors may be used to endorse or promote
+ *    products derived from this software without specific prior written
+ *    permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -33,89 +33,62 @@
  *
  ****************************************************************************/
 
+#ifndef __ARCH_ARM_SRC_CXD56XX_CXD56_WDT_H
+#define __ARCH_ARM_SRC_CXD56XX_CXD56_WDT_H
+
 /****************************************************************************
  * Included Files
  ****************************************************************************/
 
 #include <nuttx/config.h>
 
-#include <stdint.h>
-#include <assert.h>
-#include "up_arch.h"
+#include "chip.h"
+#include "hardware/cxd56_wdt.h"
 
-#include <nuttx/irq.h>
-#include <nuttx/arch.h>
-#include <nuttx/board.h>
+#ifdef CONFIG_CXD56_WDT
 
-#include <arch/irq.h>
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
 
-#include "chip/switch.h"
-#include "up_internal.h"
+#ifndef __ASSEMBLY__
 
-#include "group/group.h"
+#undef EXTERN
+#if defined(__cplusplus)
+#define EXTERN extern "C"
+extern "C"
+{
+#else
+#define EXTERN extern
+#endif
 
 /****************************************************************************
  * Public Functions
  ****************************************************************************/
 
-FAR chipreg_t *z80_doirq(uint8_t irq, FAR chipreg_t *regs)
-{
-  board_autoled_on(LED_INIRQ);
+/****************************************************************************
+ * Name: cxd56_wdt_initialize
+ *
+ * Description:
+ *   Initialize the WDT watchdog time.  The watchdog timer is initialized and
+ *   registered as 'devpath.  The initial state of the watchdog time is
+ *   disabled.
+ *
+ * Input Parameters:
+ *   None
+ *
+ * Returned Values:
+ *   None
+ *
+ ****************************************************************************/
 
-#ifdef CONFIG_SUPPRESS_INTERRUPTS
+int cxd56_wdt_initialize(void);
 
-  IRQ_ENTER(regs);
-  err("ERROR: Unexpected IRQ\n");
-  PANIC();
-  return NULL; /* Won't get here */
-
-#else
-#ifdef CONFIG_ARCH_ADDRENV
-  FAR chipreg_t *newregs;
-#endif
-
-  if (irq < NR_IRQS)
-    {
-      DECL_SAVESTATE();
-
-      /* Indicate that we have entered IRQ processing logic */
-
-      IRQ_ENTER(irq, regs);
-
-      /* Deliver the IRQ */
-
-      irq_dispatch(irq, regs);
-
-#ifdef CONFIG_ARCH_ADDRENV
-      /* If a context switch occurred, 'newregs' will hold the new context */
-
-      newregs = IRQ_STATE();
-
-      if (newregs != regs)
-        {
-          /* Make sure that the address environment for the previously
-           * running task is closed down gracefully and set up the
-           * address environment for the new thread at the head of the
-           * ready-to-run list.
-           */
-
-          (void)group_addrenv(NULL);
-        }
-
-      regs = newregs;
-
-#else
-      /* If a context switch occurred, 'regs' will hold the new context */
-
-      regs = IRQ_STATE();
-#endif
-
-      /* Indicate that we are no longer in interrupt processing logic */
-
-      IRQ_LEAVE(irq);
-    }
-
-  board_autoled_off(LED_INIRQ);
-  return regs;
-#endif
+#undef EXTERN
+#if defined(__cplusplus)
 }
+#endif
+
+#endif /* __ASSEMBLY__ */
+#endif /* CONFIG_CXD56_WDT */
+#endif /* __ARCH_ARM_SRC_CXD56XX_CXD56_WDT_H */

@@ -45,6 +45,12 @@
 #include <sys/boardctl.h>
 #include <stdbool.h>
 
+#include "cxd56_clock.h"
+#include "cxd56_power.h"
+#include "cxd56_flash.h"
+#include "cxd56_sdcard.h"
+#include "cxd56_wdt.h"
+
 /****************************************************************************
  * Pre-processor Definitions
  ****************************************************************************/
