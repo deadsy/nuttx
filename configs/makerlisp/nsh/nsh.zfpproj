@@ -3,6 +3,7 @@
 
 <!-- file information -->
 <files>
+<file filter-key="flash">..\..\..\nuttx.hex</file>
 </files>
 
 <!-- configuration information -->
@@ -73,7 +74,7 @@
 </tool>
 <tool name="Debugger">
 <options>
-<option name="target" type="string" change-action="rebuild">MakerLisp</option>
+<option name="target" type="string" change-action="rebuild">nsh_flash</option>
 <option name="debugtool" type="string" change-action="none">USBSmartCable</option>
 <option name="debugtoolnames" type="string" change-action="none">ZPAKII</option>
 <option name="SmartEthernetNumbers" type="string" change-action="none">ZPAKII</option>
@@ -82,7 +83,7 @@
 </tool>
 <tool name="FlashProgrammer">
 <options>
-<option name="erasebeforeburn" type="boolean" change-action="none">false</option>
+<option name="erasebeforeburn" type="boolean" change-action="none">true</option>
 <option name="pageerasebeforeburn" type="boolean" change-action="none">false</option>
 <option name="eraseinfopage" type="boolean" change-action="none">false</option>
 <option name="enableinfopage" type="boolean" change-action="none">false</option>
@@ -224,11 +225,11 @@
 </tool>
 <tool name="Debugger">
 <options>
-<option name="target" type="string" change-action="rebuild"></option>
-<option name="debugtool" type="string" change-action="none">ZPAKII</option>
+<option name="target" type="string" change-action="rebuild">nsh_flash</option>
+<option name="debugtool" type="string" change-action="none">USBSmartCable</option>
 <option name="debugtoolnames" type="string" change-action="none">ZPAKII</option>
 <option name="SmartEthernetNumbers" type="string" change-action="none">ZPAKII</option>
-<option name="USBSerialNumbers" type="string" change-action="none">"No USB Device"</option>
+<option name="USBSerialNumbers" type="string" change-action="none"></option>
 </options>
 </tool>
 <tool name="FlashProgrammer">
