@@ -55,9 +55,9 @@
 #define IVT_MINOR_VERSION_SHIFT     0x0
 #define IVT_MINOR_VERSION_MASK      0xf
 
-#define IVT_VERSION(major, minor)   \
-  ((((major) & IVT_MAJOR_VERSION_MASK) << IVT_MAJOR_VERSION_SHIFT) |  \
-  (((minor) & IVT_MINOR_VERSION_MASK) << IVT_MINOR_VERSION_SHIFT))
+#define IVT_VERSION(major, minor)                                    \
+  ((((major) & IVT_MAJOR_VERSION_MASK) << IVT_MAJOR_VERSION_SHIFT) | \
+   (((minor) & IVT_MINOR_VERSION_MASK) << IVT_MINOR_VERSION_SHIFT))
 
 #define IVT_TAG_HEADER              (0xd1)      /* Image Vector Table */
 #define IVT_SIZE                    0x2000
