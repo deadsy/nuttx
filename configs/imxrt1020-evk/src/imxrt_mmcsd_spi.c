@@ -67,8 +67,8 @@
  * Private Definitions
  ****************************************************************************/
 
-static const int SD_SPI_PORT = CONFIG_NSH_MMCSDSPIPORTNO;       /* SD is connected to SPI1 port */
-static const int SD_SLOT_NO = 0;        /* There is only one SD slot */
+static const int SD_SPI_PORT = CONFIG_NSH_MMCSDSPIPORTNO;   /* SD is connected to SPI1 port */
+static const int SD_SLOT_NO = 0;                            /* There is only one SD slot */
 
 /*****************************************************************************
  * Private Functions

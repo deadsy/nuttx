@@ -216,6 +216,6 @@ int imxrt_lpspi4cmddata(FAR struct spi_dev_s *dev, uint32_t devid, bool cmd)
   return -ENODEV;
 }
 #endif
-#endif /* CONFIG_SPI_CMDDATA */
+#endif  /* CONFIG_SPI_CMDDATA */
 
-#endif /* CONFIG_IMXRT_LPSPI1 || CONFIG_IMXRT_LPSPI2 */
+#endif  /* CONFIG_IMXRT_LPSPI1 || CONFIG_IMXRT_LPSPI2 */

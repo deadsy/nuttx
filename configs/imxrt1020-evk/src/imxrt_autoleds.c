@@ -140,8 +140,8 @@ void board_autoled_on(int led)
     case 2:                    /* LED No change */
       return;
 
-    case 1:                    /* LED On */
-    case 3:                    /* LED On */
+    case 1:                     /* LED On */
+    case 3:                     /* LED On */
       break;
     }
 
@@ -167,9 +167,9 @@ void board_autoled_off(int led)
 {
   switch (led)
     {
-    case 0:                    /* LED Off */
-    case 1:                    /* LED Off */
-    case 3:                    /* LED Off */
+    case 0:                     /* LED Off */
+    case 1:                     /* LED Off */
+    case 3:                     /* LED Off */
       break;
 
     case 2:                    /* LED No change */

@@ -283,6 +283,6 @@ int arch_phy_irq(FAR const char *intf, xcpt_t handler, void *arg,
   spin_unlock_irqrestore(flags);
   return OK;
 }
-#endif /* GPIO_ENET_IRQ */
+#endif  /* GPIO_ENET_IRQ */
 
-#endif /* CONFIG_IMXRT_ENET */
+#endif  /* CONFIG_IMXRT_ENET */

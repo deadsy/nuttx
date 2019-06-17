@@ -329,5 +329,5 @@ extern "C"
 }
 #endif
 
-#endif /* __ASSEMBLY__ */
-#endif /* __CONFIGS_IMXRT1020_EVK_INCLUDE_BOARD_H */
+#endif  /* __ASSEMBLY__ */
+#endif  /* __CONFIGS_IMXRT1020_EVK_INCLUDE_BOARD_H */

@@ -51,20 +51,20 @@ const struct flexspi_nor_config_s flash_config =
 {
   .mem_config =
   {
-    .tag                        = FLEXSPI_CFG_BLK_TAG,
-    .version                    = FLEXSPI_CFG_BLK_VERSION,
-    .read_sample_clksrc         = FLASH_READ_SAMPLE_CLK_LOOPBACK_INTERNELLY,
-    .cs_hold_time               = 3u,
-    .cs_setup_time              = 3u,
-    .device_mode_cfg_enable     = true,
-    .device_mode_seq.seq_num    = 1,
-    .device_mode_seq.seq_id     = 4,    /* These commands set the Quad bit */
-    .device_mode_arg            = 0x40,    /* on the flash to drive 4 pins.  */
-    .device_type                = FLEXSPI_DEVICE_TYPE_SERIAL_NOR,
-    .sflash_pad_type            = SERIAL_FLASH_4PADS,
-    .serial_clk_freq            = FLEXSPI_SERIAL_CLKFREQ_100MHz,
-    .sflash_a1size              = 8u * 1024u * 1024u,
-    .data_valid_time            = { 16u,     16u   },
+    .tag = FLEXSPI_CFG_BLK_TAG,
+    .version = FLEXSPI_CFG_BLK_VERSION,
+    .read_sample_clksrc = FLASH_READ_SAMPLE_CLK_LOOPBACK_INTERNELLY,
+    .cs_hold_time = 3u,
+    .cs_setup_time = 3u,
+    .device_mode_cfg_enable = true,
+    .device_mode_seq.seq_num = 1,
+    .device_mode_seq.seq_id = 4,        /* These commands set the Quad bit */
+    .device_mode_arg = 0x40,            /* on the flash to drive 4 pins.  */
+    .device_type = FLEXSPI_DEVICE_TYPE_SERIAL_NOR,
+    .sflash_pad_type = SERIAL_FLASH_4PADS,
+    .serial_clk_freq = FLEXSPI_SERIAL_CLKFREQ_100MHz,
+    .sflash_a1size = 8u * 1024u * 1024u,
+    .data_valid_time = { 16u, 16u   },
     /*
      * .controller_misc_option = (1 <<
      * FLEXSPIMISC_OFFSET_PAD_SETTING_OVERRIDE_EN),
@@ -73,25 +73,25 @@ const struct flexspi_nor_config_s flash_config =
      * .datapad_setting_override = (2<<3)|(3<<6),
      * .dqspad_setting_override = 0,
      */
-    .lookup_table  =
+    .lookup_table =
     {
       /* 0 - Quad Input/output read sequence - with optimised XIP support */
       [0] = FLEXSPI_LUT_SEQ(CMD_SDR, FLEXSPI_1PAD, 0xEB, RADDR_SDR, FLEXSPI_4PAD, 0x18),
-      [1] = FLEXSPI_LUT_SEQ(MODE8_SDR,      FLEXSPI_4PAD,                            0xA0,                            DUMMY_SDR,                            FLEXSPI_4PAD,                            0x04),
-      [2] = FLEXSPI_LUT_SEQ(READ_SDR,        FLEXSPI_4PAD,                            0x04,                            JMP_ON_CS,                            0, 1),
+      [1] = FLEXSPI_LUT_SEQ(MODE8_SDR, FLEXSPI_4PAD, 0xA0, DUMMY_SDR, FLEXSPI_4PAD, 0x04),
+      [2] = FLEXSPI_LUT_SEQ(READ_SDR, FLEXSPI_4PAD, 0x04, JMP_ON_CS, 0, 1),
       /* 1 - Read Status */
-      [1 * 4] = FLEXSPI_LUT_SEQ(CMD_SDR,                                FLEXSPI_1PAD,                                0x05,                                READ_SDR,                                FLEXSPI_1PAD,                                0x01),
+      [1 * 4] = FLEXSPI_LUT_SEQ(CMD_SDR, FLEXSPI_1PAD, 0x05, READ_SDR, FLEXSPI_1PAD, 0x01),
       /* 3 - Write Enable */
-      [3 * 4] = FLEXSPI_LUT_SEQ(CMD_SDR,                                FLEXSPI_1PAD,                                0x06,                                STOP,                                0,                                0),
+      [3 * 4] = FLEXSPI_LUT_SEQ(CMD_SDR, FLEXSPI_1PAD, 0x06, STOP, 0, 0),
       /* 4 - Write status */
-      [4 * 4] = FLEXSPI_LUT_SEQ(CMD_SDR,                                FLEXSPI_1PAD,                                0x01,                                WRITE_SDR,                                FLEXSPI_1PAD,                                0x1),
+      [4 * 4] = FLEXSPI_LUT_SEQ(CMD_SDR, FLEXSPI_1PAD, 0x01, WRITE_SDR, FLEXSPI_1PAD, 0x1),
       /* 5 - Erase Sector */
-      [5 * 4] = FLEXSPI_LUT_SEQ(CMD_SDR,                                FLEXSPI_1PAD,                                0xD7,                                RADDR_SDR,                                FLEXSPI_1PAD,                                0x18),
+      [5 * 4] = FLEXSPI_LUT_SEQ(CMD_SDR, FLEXSPI_1PAD, 0xD7, RADDR_SDR, FLEXSPI_1PAD, 0x18),
       /* 9 - Page Program */
-      [9 * 4] = FLEXSPI_LUT_SEQ(CMD_SDR,                                FLEXSPI_1PAD,                                0x02,                                RADDR_SDR,                                FLEXSPI_1PAD,                                0x18),
-      [9 * 4 + 1] = FLEXSPI_LUT_SEQ(WRITE_SDR,                                    FLEXSPI_1PAD,                                    0x8,                                    STOP,                                    FLEXSPI_1PAD,                                    0x0),
+      [9 * 4] = FLEXSPI_LUT_SEQ(CMD_SDR, FLEXSPI_1PAD, 0x02, RADDR_SDR, FLEXSPI_1PAD, 0x18),
+      [9 * 4 + 1] = FLEXSPI_LUT_SEQ(WRITE_SDR, FLEXSPI_1PAD, 0x8, STOP, FLEXSPI_1PAD, 0x0),
       /* 11 - Chip Erase */
-      [11 * 4] = FLEXSPI_LUT_SEQ(CMD_SDR,                                 FLEXSPI_1PAD,                                 0xC7,                                 STOP,                                 FLEXSPI_1PAD,                                 0x0),
+      [11 * 4] = FLEXSPI_LUT_SEQ(CMD_SDR, FLEXSPI_1PAD, 0xC7, STOP, FLEXSPI_1PAD, 0x0),
     },
   },
   .page_size = 256u,
@@ -103,21 +103,21 @@ const struct flexspi_nor_config_s flash_config =
 __attribute__ ((section(".boot_hdr.ivt")))
 const struct ivt_s g_image_vector_table =
 {
-  IVT_HEADER,                   /* IVT Header */
-  0x60002000,                   /* Image Entry Function */
-  IVT_RSVD,                     /* Reserved = 0 */
-  (uint32_t)DCD_ADDRESS,        /* Address where DCD information is stored */
-  (uint32_t)BOOT_DATA_ADDRESS,   /* Address where BOOT Data Structure is stored */
-  (uint32_t)&g_image_vector_table,   /* Pointer to IVT Self (absolute address) */
-  (uint32_t)CSF_ADDRESS,        /* Address where CSF file is stored */
-  IVT_RSVD                      /* Reserved = 0 */
+  IVT_HEADER,                       /* IVT Header */
+  0x60002000,                       /* Image Entry Function */
+  IVT_RSVD,                         /* Reserved = 0 */
+  (uint32_t)DCD_ADDRESS,            /* Address where DCD information is stored */
+  (uint32_t)BOOT_DATA_ADDRESS,      /* Address where BOOT Data Structure is stored */
+  (uint32_t)&g_image_vector_table,  /* Pointer to IVT Self (absolute address) */
+  (uint32_t)CSF_ADDRESS,            /* Address where CSF file is stored */
+  IVT_RSVD                          /* Reserved = 0 */
 };
 
 __attribute__ ((section(".boot_hdr.boot_data")))
 const struct boot_data_s g_boot_data =
 {
-  FLASH_BASE,           /* boot start location */
-  (FLASH_END - FLASH_BASE),   /* size */
-  PLUGIN_FLAG,          /* Plugin flag */
-  0xFFFFFFFF            /* empty - extra data word */
+  FLASH_BASE,               /* boot start location */
+  (FLASH_END - FLASH_BASE), /* size */
+  PLUGIN_FLAG,              /* Plugin flag */
+  0xFFFFFFFF                /* empty - extra data word */
 };

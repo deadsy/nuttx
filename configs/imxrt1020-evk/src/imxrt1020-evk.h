@@ -78,7 +78,7 @@
  * This pin must be configured as ALT5, GPIO1_IO05
  */
 
-#define IOMUX_LED (IOMUX_PULL_NONE | IOMUX_CMOS_OUTPUT | \
+#define IOMUX_LED (IOMUX_PULL_NONE | IOMUX_CMOS_OUTPUT |    \
                    IOMUX_DRIVE_40OHM | IOMUX_SPEED_MEDIUM | \
                    IOMUX_SLEW_SLOW)
 
@@ -109,6 +109,7 @@
 
 #if defined(CONFIG_LIB_BOARDCTL) || defined(CONFIG_BOARD_LATE_INITIALIZE)
 int imxrt_bringup(void);
+
 #endif
 
 /****************************************************************************
@@ -131,6 +132,7 @@ void imxrt_spidev_initialize(void);
 
 #ifdef CONFIG_MMCSD_SPI
 int imxrt_mmcsd_spi_initialize(int minor);
+
 #endif
 
 /****************************************************************************
@@ -149,6 +151,7 @@ int imxrt_mmcsd_spi_initialize(int minor);
 
 #ifdef CONFIG_ARCH_LEDS
 void imxrt_autoled_initialize(void);
+
 #endif
 
 #ifdef CONFIG_DEV_GPIO
@@ -162,7 +165,8 @@ void imxrt_autoled_initialize(void);
  ****************************************************************************/
 
 int imxrt_gpio_initialize(void);
+
 #endif
 
-#endif /* __ASSEMBLY__ */
-#endif /* __CONFIGS_IMXRT1020_EVK_SRC_IMXRT1020_EVK_H */
+#endif  /* __ASSEMBLY__ */
+#endif  /* __CONFIGS_IMXRT1020_EVK_SRC_IMXRT1020_EVK_H */

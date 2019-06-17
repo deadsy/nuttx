@@ -78,11 +78,13 @@ struct imxrtgpio_dev_s
 
 #if BOARD_NGPIOIN > 0
 static int gpin_read(FAR struct gpio_dev_s *dev, FAR bool * value);
+
 #endif
 
 #if BOARD_NGPIOOUT > 0
 static int gpout_read(FAR struct gpio_dev_s *dev, FAR bool * value);
 static int gpout_write(FAR struct gpio_dev_s *dev, bool value);
+
 #endif
 
 /****************************************************************************
