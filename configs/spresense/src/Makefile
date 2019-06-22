@@ -58,6 +58,10 @@ endif
 
 ifeq ($(CONFIG_ARCH_LEDS),y)
 CSRCS += cxd56_leds.c
+else
+ifeq ($(CONFIG_USERLED),y)
+CSRCS += cxd56_userleds.c
+endif
 endif
 
 ifeq ($(CONFIG_CXD56_PWM),y)
@@ -82,6 +86,14 @@ endif
 
 ifeq ($(CONFIG_NETDEVICES),y)
 CSRCS += cxd56_netinit.c
+endif
+
+ifeq ($(CONFIG_WL_GS2200M),y)
+CSRCS += cxd56_gs2200m.c
+endif
+
+ifeq ($(CONFIG_SENSORS_BMI160_I2C),y)
+CSRCS += cxd56_bmi160_i2c.c
 endif
 
 include $(TOPDIR)/configs/Board.mk

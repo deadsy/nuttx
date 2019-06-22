@@ -53,6 +53,10 @@
 #include <nuttx/usb/rndis.h>
 #endif
 
+#ifdef CONFIG_USERLED_LOWER
+#include <nuttx/leds/userled.h>
+#endif
+
 #include <arch/chip/pm.h>
 #include "chip.h"
 
@@ -98,6 +102,9 @@
 
 #ifdef CONFIG_PWM
 #include "cxd56_pwm.h"
+#endif
+#ifdef CONFIG_CXD56_ADC
+#include <arch/chip/adc.h>
 #endif
 
 #include "spresense.h"
@@ -268,6 +275,22 @@ int cxd56_bringup(void)
     }
 #endif
 
+#ifdef CONFIG_CXD56_ADC
+  ret = cxd56_adcinitialize();
+  if (ret < 0)
+    {
+      _err("ERROR: Failed to initialze adc. \n");
+    }
+#endif
+
+#ifdef CONFIG_USERLED_LOWER
+  ret = userled_lower_initialize("/dev/userleds");
+  if (ret < 0)
+    {
+      _err("ERROR: Failed to initialze led. \n");
+    }
+#endif
+
 #ifdef CONFIG_CXD56_SFC
   ret = board_flash_initialize();
   if (ret < 0)
@@ -288,22 +311,11 @@ int cxd56_bringup(void)
   cxd56_gpio_write(PIN_SDIO_DATA2, false);
   cxd56_gpio_write(PIN_SDIO_DATA3, false);
 
-#if defined(CONFIG_CXD56_SDIO) && !defined(CONFIG_CXD56_SPISD)
+#if defined(CONFIG_CXD56_SDIO)
   ret = board_sdcard_initialize();
   if (ret < 0)
     {
       _err("ERROR: Failed to initialze sdhci. \n");
-    }
-#endif
-
-#ifdef CONFIG_CXD56_SPISD
-  /* Mount the SPI-based MMC/SD block driver */
-
-  ret = board_spisd_initialize(0, 4);
-  if (ret < 0)
-    {
-      ferr("ERROR: Failed to initialize SPI device to MMC/SD: %d\n",
-           ret);
     }
 #endif
 
@@ -324,6 +336,22 @@ int cxd56_bringup(void)
   mac[4] = (CONFIG_NETINIT_MACADDR_1 >> (8 * 1)) & 0xff;
   mac[5] = (CONFIG_NETINIT_MACADDR_1 >> (8 * 0)) & 0xff;
   usbdev_rndis_initialize(mac);
+#endif
+
+#ifdef CONFIG_WL_GS2200M
+  ret = board_gs2200m_initialize("/dev/gs2200m", 5);
+  if (ret < 0)
+    {
+      _err("ERROR: Failed to initialze GS2200M. \n");
+    }
+#endif
+
+#ifdef CONFIG_SENSORS_BMI160_I2C
+  ret = board_bmi160_initialize(0);
+  if (ret < 0)
+    {
+      _err("ERROR: Failed to initialze BMI160. \n");
+    }
 #endif
 
   return 0;

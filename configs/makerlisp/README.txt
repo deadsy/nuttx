@@ -305,19 +305,82 @@ Configuration Subdirectories
          nsh> date
          Sun, Jun 16 15:09:01 2019
 
-       The SD card can be be mounted with the following NSH mount command:
+       When the system boots, it will probe the SD card and create a
+       block driver called mmcsd0:
+
+         nsh> ls /dev
+         /dev:
+          console
+          mmcsd0
+          null
+          ttyS0
+         nsh> mount
+           /proc type procfs
+
+       The SD card can be mounted with the following NSH mount command:
 
          nsh> mount -t vfat /dev/mmcsd0 /mnt/sdcard
+         nsh> ls /mnt
+         /mnt:
+          sdcard/
+         nsh> mount
+           /mnt/sdcard type vfat
+           /proc type procfs
+         nsh> ls -lR /mnt/sdcard
+         /mnt/sdcard:
+          drw-rw-rw-       0 System Volume Information/
+         /mnt/sdcard/System Volume Information:
+          -rw-rw-rw-      76 IndexerVolumeGuid
+          -rw-rw-rw-      12 WPSettings.dat
+
+       You can they use the SD card as any other file system.
+
+         nsh> ls /mnt/sdcard
+         /mnt/sdcard:
+          System Volume Information/
+         nsh> echo "This is a test" >/mnt/sdcard/atest.txt
+         nsh> ls /mnt/sdcard
+         /mnt/sdcard:
+          System Volume Information/
+          atest.txt
+         nsh> cat /mnt/sdcard/atest.txt
+         This is a test
+
+       Don't forget to un-mount the volume before power cycling:
+
+         nsh> mount
+           /mnt/sdcard type vfat
+           /proc type procfs
+         nsh> umount /mnt/sdcard
+         nsh> mount
+           /proc type procfs
 
        NOTE:  The is no card detect signal so the microSD card must be
        placed in the card slot before the system is started.
 
+    3. Optimizations:
+
+       - The stack sizes have not been tuned and, hence, are probably too
+         large.
+       - Currently the code runs out of FLASH.  Running out of the zero-
+         wait-state RAM would be much faster!
+
     STATUS:
-      2109-06-16:  The basic NSH configuration appears to be fully functional
+      2019-06-16:  The basic NSH configuration appears to be fully functional
         using only the CPU and I/O expansion card.  Console is provided over
         USB.
 
         Added support for SPI-based SD cards, the RTC and procFS.  There are
-        still a few issues at the end-of-the-day:  (1) the SD card block driver
-        is not being registered, and (2) RTC does not preserve time across a
+        still a few issues at the end-of-the-day:  (1) the SD card initialization
+        hangs and prevents booting, and (2) RTC does not preserve time across a
         power cycle.
+
+      2019-06-17:  The SD initialization was due to some error in the SPI driver:
+        It waits for a byte transfer to complete but it never receives the
+        indication that the transfer completed.  That SPI problem has been
+        fixed and now the SD card is partially functional.
+
+        Reads from the SD are successful, but writes to the SD card (creating
+        files, creating directories, etc) hang.
+
+      2019-06-18:  The RTC now appears to be fully functional.
