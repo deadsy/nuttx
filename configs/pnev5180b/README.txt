@@ -99,6 +99,15 @@ Where <subdir> is one of the following:
        b. Execute 'make menuconfig' in nuttx/ in order to start the
           reconfiguration process.
 
-  nsh-usbconsole:
+  usbnsh:
     Configures the NuttShell (nsh) located at apps/system/nsh.  The
     Configuration enables the CDC/ACM based NSH interface on /dev/ttyACM0.
+
+  nsh-cdcecm:
+    Configures the NuttShell (nsh) to provide a terminal on UART0.  The
+    Configuration also provides network interface eth0 via CDC/ECM.
+
+  usbnsh-cdcecm:
+    This configuration includes a USB Composite Device with both CDC/ACM and
+    CDC/ECM.  NuttShell provides a terminal via CDC/ACM.  A network interface
+    (eth0) is also provided via CDC/ECM.

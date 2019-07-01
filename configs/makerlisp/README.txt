@@ -265,17 +265,38 @@ Common Configuration Notes
 Configuration Subdirectories
 ----------------------------
 
-  nsh:
+  nsh_flash, nsh_ram:
 
-    This configuration builds the NuttShell (NSH).  That code can be
-    found in examples/nsh.  For more information see:  examples/nsh/README.txt
-    and Documentation/NuttShell.html.
+    These configuration build the NuttShell (NSH).  That code can be
+    found in apps/system/nsh and apps/system/nshlib..  For more
+    information see:  apps/system/nsh/README.txt and
+    Documentation/NuttShell.html.
 
     NOTES:
 
-    1. A serial console is provided on UART0.  This configuration should work
+    1. The two configurations different only in that one builds for
+       execution entirely from FLASH and the other for execution entirely
+       from RAM.  A bootloader of some kind is required to support such
+       execution from RAM!  This difference is reflected in a single
+       configuration setting:
+
+         CONFIG_BOOT_RUNFROMFLASH=y    # Execute from flash (default)
+         CONFIG_BOOT_RUNFROMEXTSRAM=y  # Execute from external SRAM
+
+       A third configuration is possible but not formalized with its own
+       defconfig file:  You can also configure the code to boot from FLASH,
+       copy the code to external SRAM, and then execute from RAM.  Such a
+       configuration needs the following settings in the .config file:
+
+         CONFIG_BOOT_RUNFROMEXTSRAM=y  # Execute from external SRAM
+         CONFIG_MAKERLISP_COPYTORAM=y  # Boot from FLASH but copy to SRAM
+
+       Why execute from SRAM at all?  Because you will get MUCH better
+       performance because of the zero wait state SRAM implementation.
+
+    2. A serial console is provided on UART0.  This configuration should work
        with or without the the VGA and Keyboard adapter boards.  Normal
-       connectivity is via host serical console connected through the USB
+       connectivity is via host serial console connected through the USB
        serial console.
 
        With the I/O expansion board, the serial console can also be used with
@@ -291,7 +312,7 @@ Configuration Subdirectories
        The PC terminal software should be configured as described in the
        MakerLisp Putty HOWTO document:  115200N1 BAUD.
 
-    2. The eZ80 RTC, the procFS file system, and SD card support in included.
+    3. The eZ80 RTC, the procFS file system, and SD card support in included.
        The procFS file system will be auto-mounted at /proc when the board
        boots.
 
@@ -358,7 +379,7 @@ Configuration Subdirectories
        NOTE:  The is no card detect signal so the microSD card must be
        placed in the card slot before the system is started.
 
-    3. Optimizations:
+    4. Optimizations:
 
        - The stack sizes have not been tuned and, hence, are probably too
          large.
@@ -378,9 +399,24 @@ Configuration Subdirectories
       2019-06-17:  The SD initialization was due to some error in the SPI driver:
         It waits for a byte transfer to complete but it never receives the
         indication that the transfer completed.  That SPI problem has been
-        fixed and now the SD card is partially functional.
-
-        Reads from the SD are successful, but writes to the SD card (creating
-        files, creating directories, etc) hang.
+        fixed and now the SD card is functional.
 
       2019-06-18:  The RTC now appears to be fully functional.
+
+      2019-06-26:  Renamed nsh configuration to nsh_flash.  Added nsh_ram
+        configuration.  Not yet verified.
+
+  sdboot
+
+    This configuration implements a very simple boot loader.  In runs from
+    FLASH and simply initializes the external SRAM, mounts the FAT file
+    system on the SD card, and checks to see if there is a file called
+    nuttx.hex on the SD card.  If so, it will load the Intel HEX file into
+    memory and jump to address 0x040000.  This, of course, assumes that
+    the application's reset vector resides at address 0x040000 in external
+    SRAM.
+
+    The boot loader source is located at configs/makerlisp/src/sd_main.c.
+
+    STATUS:
+      2019-06-26:  Configuration added.  Not yet verified.

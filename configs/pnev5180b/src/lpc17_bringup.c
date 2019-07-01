@@ -42,6 +42,7 @@
 #include <stdio.h>
 #include <syslog.h>
 #include <errno.h>
+#include <sys/mount.h>
 
 #include <nuttx/board.h>
 #include <nuttx/spi/spi.h>
@@ -64,6 +65,10 @@
 
 #ifdef CONFIG_CDCECM_COMPOSITE
 #  include <nuttx/board.h>
+#endif
+
+#ifdef CONFIG_LPC17_ROMFS
+#  include "lpc17_romfs.h"
 #endif
 
 #include "lpc17_spi.h"
@@ -114,7 +119,27 @@ int pnev5180b_bringup(void)
 {
   int ret = OK;
 
-#ifndef CONFIG_BOARDCTL_USBDEVCTRL
+#ifdef CONFIG_FS_PROCFS
+  ret = mount(NULL, "/proc", "procfs", 0, NULL);
+  if (ret < 0)
+    {
+      syslog(LOG_ERR, "ERROR: Failed to mount the PROC filesystem: %d (%d)\n",
+             ret, errno);
+      goto done;
+    }
+#endif
+
+#ifdef CONFIG_FS_BINFS
+  ret = mount(NULL, "/bin", "binfs", 0, NULL);
+  if (ret < 0)
+    {
+      syslog(LOG_ERR, "ERROR: Failed to mount the BIN filesystem: %d (%d)\n",
+             ret, errno);
+      goto done;
+    }
+#endif
+
+#if !defined(CONFIG_BOARDCTL_USBDEVCTRL) && !defined(CONFIG_USBDEV_COMPOSITE)
 #  ifdef CONFIG_CDCACM
   ret = cdcacm_initialize(0, NULL);
   if (ret < 0)
@@ -124,7 +149,7 @@ int pnev5180b_bringup(void)
     }
 #  endif
 
-#  if defined(CONFIG_NET_CDCECM) && !defined(CONFIG_CDCECM_COMPOSITE)
+#  ifdef CONFIG_NET_CDCECM
   ret = cdcecm_initialize(0, NULL);
   if (ret < 0)
     {
@@ -132,11 +157,20 @@ int pnev5180b_bringup(void)
       goto done;
     }
 #  endif
-
-#  if defined(CONFIG_CDCECM_COMPOSITE)
-  board_composite_connect(0, 0);
-#  endif
 #endif /* CONFIG_BOARDCTL_USBDEVCTRL */
+
+#if defined(CONFIG_USBDEV_COMPOSITE)
+  board_composite_connect(0, 0);
+#endif
+
+#ifdef CONFIG_LPC17_ROMFS
+  ret = lpc17_romfs_initialize();
+  if (ret != OK)
+    {
+      syslog(LOG_ERR, "ERROR: lpc17_romfs_initialize() failed: %d\n", ret);
+      goto done;
+    }
+#endif
 
 #ifdef CONFIG_USBMONITOR
   ret = usbmonitor_start();

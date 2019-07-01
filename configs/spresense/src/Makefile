@@ -52,6 +52,10 @@ ifeq ($(CONFIG_BOARDCTL_IOCTL),y)
 CSRCS += cxd56_ioctl.c
 endif
 
+ifeq ($(CONFIG_BOARDCTL_UNIQUEID),y)
+CSRCS += cxd56_uid.c
+endif
+
 ifeq ($(CONFIG_ARCH_FPU),y)
 CSRCS += cxd56_ostest.c
 endif
@@ -62,6 +66,10 @@ else
 ifeq ($(CONFIG_USERLED),y)
 CSRCS += cxd56_userleds.c
 endif
+endif
+
+ifeq ($(CONFIG_CXD56_GPIO_IRQ),y)
+CSRCS += cxd56_gpioif.c
 endif
 
 ifeq ($(CONFIG_CXD56_PWM),y)
@@ -80,6 +88,14 @@ ifeq ($(CONFIG_CXD56_SDIO),y)
 CSRCS += cxd56_sdcard.c
 endif
 
+ifeq ($(CONFIG_CXD56_GAUGE),y)
+CSRCS += cxd56_gauge.c
+endif
+
+ifeq ($(CONFIG_CXD56_CHARGER),y)
+CSRCS += cxd56_charger.c
+endif
+
 ifeq ($(CONFIG_USBMSC),y)
 CSRCS += cxd56_usbmsc.c
 endif
@@ -94,6 +110,10 @@ endif
 
 ifeq ($(CONFIG_SENSORS_BMI160_I2C),y)
 CSRCS += cxd56_bmi160_i2c.c
+endif
+
+ifeq ($(CONFIG_CXD56_I2C_DRIVER),y)
+CSRCS += cxd56_i2cdev.c
 endif
 
 include $(TOPDIR)/configs/Board.mk

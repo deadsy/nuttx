@@ -48,10 +48,14 @@
 #include "cxd56_clock.h"
 #include "cxd56_power.h"
 #include "cxd56_flash.h"
+#include "cxd56_gauge.h"
+#include "cxd56_charger.h"
 #include "cxd56_gs2200m.h"
+#include "cxd56_i2cdev.h"
 #include "cxd56_bmi160.h"
 #include "cxd56_sdcard.h"
 #include "cxd56_wdt.h"
+#include "cxd56_gpioif.h"
 
 /****************************************************************************
  * Pre-processor Definitions
@@ -212,6 +216,16 @@ enum board_power_device
   POWER_LTE             = PMIC_NONE,
   POWER_IMAGE_SENSOR    = PMIC_GPO(4) | PMIC_GPO(5) | PMIC_GPO(7),
 };
+
+/*
+ * Set signal id for notify USB device connection status and
+ * supply current value.
+ * signal returns "usbdev_notify_s" struct pointer in sival_ptr.
+ *
+ * Arg: Value of sinal number
+ */
+
+#define BOARDIOC_USBDEV_SETNOTIFYSIG      (BOARDIOC_USER+0x0001)
 
 /****************************************************************************
  * Public Types
