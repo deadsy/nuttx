@@ -68,6 +68,10 @@ CSRCS += cxd56_userleds.c
 endif
 endif
 
+ifeq ($(CONFIG_ARCH_BUTTONS),y)
+CSRCS += cxd56_buttons.c
+endif
+
 ifeq ($(CONFIG_CXD56_GPIO_IRQ),y)
 CSRCS += cxd56_gpioif.c
 endif
@@ -100,6 +104,10 @@ ifeq ($(CONFIG_USBMSC),y)
 CSRCS += cxd56_usbmsc.c
 endif
 
+ifeq ($(CONFIG_USBDEV_COMPOSITE),y)
+CSRCS += cxd56_composite.c
+endif
+
 ifeq ($(CONFIG_NETDEVICES),y)
 CSRCS += cxd56_netinit.c
 endif
@@ -114,6 +122,14 @@ endif
 
 ifeq ($(CONFIG_CXD56_I2C_DRIVER),y)
 CSRCS += cxd56_i2cdev.c
+endif
+
+ifeq ($(CONFIG_LCD_LPM013M091A),y)
+CSRCS += cxd56_lpm013m091a.c
+endif
+
+ifeq ($(CONFIG_LCD_ILI9340),y)
+CSRCS += cxd56_ili9340.c
 endif
 
 include $(TOPDIR)/configs/Board.mk

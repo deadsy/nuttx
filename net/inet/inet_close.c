@@ -291,7 +291,7 @@ static inline int tcp_close_disconnect(FAR struct socket *psock)
 
       ret = clock_gettime(CLOCK_REALTIME, &abstime);
       if (ret >= 0)
-       {
+        {
           /* NOTE: s_linger's unit is deciseconds so we don't need to update
            * abstime.tv_nsec here.
            */
@@ -421,7 +421,6 @@ static inline int udp_close(FAR struct socket *psock)
   struct timespec abstime;
   bool linger;
 #endif
-  int ret;
 
   /* Interrupts are disabled here to avoid race conditions */
 
@@ -446,6 +445,8 @@ static inline int udp_close(FAR struct socket *psock)
   linger = _SO_GETOPT(psock->s_options, SO_LINGER);
   if (linger)
     {
+      int ret;
+
       /* Get the current time */
 
       ret = clock_gettime(CLOCK_REALTIME, &abstime);

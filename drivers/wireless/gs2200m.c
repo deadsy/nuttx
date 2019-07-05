@@ -72,7 +72,7 @@
 
 #define GS2200MWORK LPWORK
 
-#define SPI_MAXFREQ  (4000000)  /* 4MHz. */
+#define SPI_MAXFREQ  CONFIG_WL_GS2200M_SPI_FREQUENCY
 #define NRESPMSG     8
 
 #define MAX_PKT_LEN  1500
@@ -861,7 +861,7 @@ retry:
    * workaround to avoid realy receiving an invalid frame response
    */
 
-  usleep(100);
+  up_udelay(100);
 
   /* Read frame response */
 
@@ -962,6 +962,12 @@ retry:
     {
       wlwarn("*** warning: WR_RESP_NOK received.. retrying. (n=%d) \n", n);
       nxsig_usleep(100 * 1000);
+
+      if (100 < n)
+        {
+          return SPI_TIMEOUT;
+        }
+
       n++;
       goto retry;
     }
@@ -1402,7 +1408,7 @@ static enum pkt_type_e gs2200m_get_mac(FAR struct gs2200m_dev_s *dev)
       dev->net_dev.d_mac.ether.ether_addr_octet[n] = (uint8_t)mac[n];
     }
 
- errout:
+errout:
   _release_pkt_dat(&pkt_dat);
   return r;
 }
@@ -1862,6 +1868,13 @@ static int gs2200m_ioctl_connect(FAR struct gs2200m_dev_s *dev,
         break;
 
       default:
+        /* REVISIT:
+         * TYPE_BULK for other sockets might be received here,
+         * if the sockets have heavy bulk traffic.
+         * In this case, the packet should be queued and
+         * wait for a response to the NCTCP command.
+         */
+
         wlerr("+++ error: type=%d \n", type);
         ASSERT(false);
         ret = -EINVAL;
@@ -1888,9 +1901,18 @@ static int gs2200m_ioctl_send(FAR struct gs2200m_dev_s *dev,
   gs2200m_set_gpio(dev, LED_GPIO, 1);
 #endif
 
+  if (!_cid_is_set(&dev->valid_cid_bits, msg->cid))
+    {
+      wlinfo("+++ already closed \n");
+      type = TYPE_DISCONNECT;
+      goto errout;
+    }
+
   type = gs2200m_send_bulk(dev, msg->cid, msg->buf, msg->len);
 
   msg->type = type;
+
+errout:
 
   if (type != TYPE_OK)
     {
@@ -2448,6 +2470,14 @@ static void gs2200m_irq_worker(FAR void *arg)
   dev->pkt_q_cnt[c]++;
 
   wlinfo("=== added to qkt_q[%d] t=%d \n", c, t);
+
+  /* When a DISCONNECT packet received, disable the cid */
+
+  if (TYPE_DISCONNECT == t)
+    {
+      wlinfo("=== received DISCONNECT for cid=%c \n", pkt_dat->cid);
+      _enable_cid(&dev->valid_cid_bits, pkt_dat->cid, false);
+    }
 
   /* If accept() is not in progress for the cid, add the packet to notif_q
    *
